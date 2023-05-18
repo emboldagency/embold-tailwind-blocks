@@ -1,0 +1,22 @@
+{
+    "name": "embold/embold-tailwind-blocks",
+    "autoload": {
+        "psr-4": {
+            "App\\": "includes/",
+            "App\\Blocks\\": "app/Blocks/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Roots\\Acorn\\ComposerScripts::postAutoloadDump"
+        ]
+    },
+    "require": {
+        "log1x/acf-composer": "^2.1",
+        "roots/acorn": "^3.1",
+        "illuminate/support": "^9.47",
+        "illuminate/filesystem": "^9.47",
+        "illuminate/container": "^9.47",
+        "illuminate/config": "^9.52"
+    }
+}
