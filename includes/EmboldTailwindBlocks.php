@@ -22,4 +22,35 @@ class EmboldTailwindBlocks {
         // Initialize the blocks.
         InitBlocks::initialize($this->app);
     }
+
+    public function formatSubfieldsToArrays() {
+        // Add the filter with a higher priority
+        add_filter('acf/format_value', [$this, 'convert_subfields_to_array'], 30, 3);
+    }
+
+    public function convert_subfields_to_array($value, $post_id, $field)
+    {
+        // Apply the conversion only to repeater fields
+        if ($field['type'] === 'repeater') {
+            $value = $this->convert_subfields_recursive($value);
+        }
+
+        return $value;
+    }
+
+    public function convert_subfields_recursive($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->convert_subfields_recursive($value);
+            }
+        } elseif (is_object($data)) {
+            $data = (array) $data;
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->convert_subfields_recursive($value);
+            }
+        }
+
+        return $data;
+    }
 }

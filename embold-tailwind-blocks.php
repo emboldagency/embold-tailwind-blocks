@@ -28,5 +28,8 @@ function embold_tailwind_blocks_init() {
 
     // Initialize the plugin
     $plugin->init();
+
+    // Add compatibility with Laraish Themes
+    $plugin->formatSubfieldsToArrays();
 }
 add_action('plugins_loaded', 'embold_tailwind_blocks_init');
