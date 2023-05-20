@@ -40,6 +40,8 @@ always override the version found in the plugin.
 
 You may need to modify what ACF fields are in a block, or how the data is being manipulate on its way to the frontend.
 
+> **Important:** If you copy over your blocks class you must also copy over the view
+
 The class file for each block is stored in `app/Blocks/{BlockName}.php` and can be copied over directly to your theme
 in the same directory and file name.
 
