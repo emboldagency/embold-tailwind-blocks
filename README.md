@@ -2,6 +2,32 @@
 
 ![Bender from Futurama](https://media.giphy.com/media/cYhhUmbtbneb6/giphy.gif)
 
+## Sage 10 setup
+
+After the plugin is installed and activated, you'll want to configure both your tailwind.config.js and bud.config.js to
+watch the plugins files so that purge and browsersync work with the plugin.
+
+bud.config.js
+```js
+.watch([
+            'resources/views',
+            'app',
+            '../../plugins/embold-tailwind-blocks',
+        ])
+```
+
+tailwind.config.cjs
+```js
+content: [
+        './index.php',
+        './app/**/*.php',
+        './resources/**/*.{php,vue,js}',
+        '../../plugins/embold-tailwind-blocks/**/*.php',
+    ],
+```
+
+Now classes only used in the plugin files will not be purged, and the page can be automatically reloaded when files change.
+
 ## Customizing a Block view in your Sage10 theme
 
 Often you'll find you need to tweak how a block is rendered per theme to match each design.

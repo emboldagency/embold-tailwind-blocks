@@ -42,14 +42,14 @@ abstract class CustomBlock extends Block {
 
         $this->style = $this->getStyle();
 
-        $themeViewPath = "blocks/{$this->slug}";
+        $theme_view_path = "blocks/{$this->slug}";
 
         // Check if the theme already has a view for this block, and return it if so
-        if (view()->exists($themeViewPath)) {
-            return $this->view($themeViewPath, ['block' => $this]);
+        if (view()->exists($theme_view_path)) {
+            return $this->view($theme_view_path, ['block' => $this]);
         }
 
         // If the theme doesn't have a view for this block, return ours
-        return $this->view($this->app->resourcePath("views/blocks/{$this->slug}.blade.php"), ['block' => $this]);
+        return $this->view(str_replace('includes/', '', $this->app->resourcePath("views/blocks/{$this->slug}.blade.php")), ['block' => $this]);
     }
 }
