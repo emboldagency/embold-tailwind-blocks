@@ -83,4 +83,4 @@ You will start off by duplicaing one of the exsting class files from `app/Blocks
 Configure the class and the view in a customizable format, ideally something that can be re-used. For example, if your block requires the use
 of images, add an image field where applicable so this can be changed per theme.
 
-**Registering your block** is done inside of `includes/InitBlocks.php` by adding additional blocks to the array line 11.
+**Registering your block** is done inside of `includes/InitBlocks.php` by adding additional blocks to the `$block_classes` array in the `initialize` method.
