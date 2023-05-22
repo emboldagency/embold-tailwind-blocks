@@ -19,8 +19,12 @@ class EmboldTailwindBlocks {
     }
 
     public function init() {
+        // Initialize the options page.
+        InitOptions::initialize();
+
         // Initialize the blocks.
         InitBlocks::initialize($this->app);
+        
         // Initialize the fields.
         InitFields::initialize($this->app);
     }
