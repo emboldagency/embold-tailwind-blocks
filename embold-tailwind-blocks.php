@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
- * Version:            0.1.0
+ * Version:            0.0.1
  * Author:             example
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -25,6 +25,9 @@ require_once plugin_dir_path(__FILE__) . 'includes/EmboldTailwindBlocks.php';
 function embold_tailwind_blocks_init() {
     // Create an instance of your plugin class
     $plugin = new \App\EmboldTailwindBlocks();
+
+    // Insert the block category
+    $plugin->insertBlockCategory();
 
     // Initialize the plugin
     $plugin->init();

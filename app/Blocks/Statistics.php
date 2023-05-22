@@ -28,7 +28,7 @@ class Statistics extends CustomBlock
      *
      * @var string
      */
-    public $category = 'formatting';
+    public $category = 'embold';
 
     /**
      * The block icon.

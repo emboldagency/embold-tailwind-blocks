@@ -25,6 +25,21 @@ class EmboldTailwindBlocks {
         InitFields::initialize($this->app);
     }
 
+    public function insertBlockCategory()
+    {
+        add_filter('block_categories', function ($categories, $post) {
+            return array_merge(
+                [
+                    [
+                        'slug'  => 'embold',
+                        'title' => __( 'emBold', 'embold' ),
+                    ],
+                ],
+                $categories
+            );
+        }, 10, 2);
+    }
+
     public function formatSubfieldsToArrays() {
         // Add the filter with a higher priority
         add_filter('acf/format_value', [$this, 'convert_subfields_to_array'], 30, 3);
