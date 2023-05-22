@@ -5,6 +5,8 @@ namespace App\Blocks;
 use App\CustomBlock;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
+use App\Fields\Padding;
+
 class Statistics extends CustomBlock
 {
     /**
@@ -135,7 +137,7 @@ class Statistics extends CustomBlock
         'statistics' => [
             [
                 'number' => '0000',
-                'description' => 'Stat small description'
+                'description' => 'Plugin small description'
             ],
             [
                 'number' => '0001',
@@ -160,8 +162,9 @@ class Statistics extends CustomBlock
     public function with()
     {
         return [
+            'featured_background' => get_field('featured_background'),
             'statistics' => $this->statistics(),
-            'padding' => get_field('padding')
+            'padding' => Padding::value()
         ];
     }
 
@@ -175,6 +178,9 @@ class Statistics extends CustomBlock
         $statistics = new FieldsBuilder('statistics');
 
         $statistics
+            ->addImage('featured_background', [
+                'return_format' => 'url',
+            ])
             ->addRepeater('statistics')
                 ->addText('number')
                 ->addText('description')

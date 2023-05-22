@@ -21,6 +21,8 @@ class EmboldTailwindBlocks {
     public function init() {
         // Initialize the blocks.
         InitBlocks::initialize($this->app);
+        // Initialize the fields.
+        InitFields::initialize($this->app);
     }
 
     public function formatSubfieldsToArrays() {

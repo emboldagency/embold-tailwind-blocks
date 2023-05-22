@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
- * Version:            0.0.1
+ * Version:            0.1.0
  * Author:             example
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -32,4 +32,5 @@ function embold_tailwind_blocks_init() {
     // Add compatibility with Laraish Themes
     $plugin->formatSubfieldsToArrays();
 }
+
 add_action('plugins_loaded', 'embold_tailwind_blocks_init');

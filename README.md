@@ -2,6 +2,23 @@
 
 ![Bender from Futurama](https://media.giphy.com/media/cYhhUmbtbneb6/giphy.gif)
 
+## What does it do?
+
+It extracts the acf-composer and acf-builder packages that Sage built on into a plugin. We can include our own default 
+Block and Field classes in the plugin files to jumpstart theme development.
+
+It includes the following by default:
+
+### Blocks
+- Statistics: A list of statistics with subfields for number and description, in 4 styles of featurd, grid, list, and full width.
+
+### Fields
+- Padding: A padding field option added to every block where the user can check whether they want padding to apply to all sides of just individual sides of a block.
+
+If for some reason you need to tweak or modify what comes with the plugin you can copy the file into your theme and tweak it.
+Need the Statistics block to do something slightly different? Copy its app/Blocks/Statistics.php from the plugin to your theme and 
+the theme files take priority. You can do this with the Padding field, or any views as well.
+
 ## Sage 10 setup
 
 After the plugin is installed and activated, you'll want to configure both your tailwind.config.js and bud.config.js to
@@ -27,6 +44,8 @@ content: [
 ```
 
 Now classes only used in the plugin files will not be purged, and the page can be automatically reloaded when files change.
+
+## Glo
 
 ## Customizing a Block view in your Sage10 theme
 
