@@ -7,6 +7,10 @@
 It extracts the acf-composer and acf-builder packages that Sage built on into a plugin. We can include our own default 
 Block and Field classes in the plugin files to jumpstart theme development.
 
+If for some reason you need to tweak or modify what comes with the plugin you can copy the file into your theme and tweak it.
+Need the Statistics block to do something slightly different? Copy its app/Blocks/Statistics.php from the plugin to your theme and 
+the theme files take priority. You can do this with the Padding field, or any views as well.
+
 It includes the following by default:
 
 ### Blocks
@@ -15,9 +19,9 @@ It includes the following by default:
 ### Fields
 - Padding: A padding field option added to every block where the user can check whether they want padding to apply to all sides of just individual sides of a block.
 
-If for some reason you need to tweak or modify what comes with the plugin you can copy the file into your theme and tweak it.
-Need the Statistics block to do something slightly different? Copy its app/Blocks/Statistics.php from the plugin to your theme and 
-the theme files take priority. You can do this with the Padding field, or any views as well.
+### Options
+The plugin creates a parent "Theme Options" category in the sidebar, this way when you're creating any options pages you
+can set their parent slugs to `theme-options`.
 
 ## Sage 10 setup
 
@@ -45,8 +49,6 @@ content: [
 
 Now classes only used in the plugin files will not be purged, and the page can be automatically reloaded when files change.
 
-## Glo
-
 ## Customizing a Block view in your Sage10 theme
 
 Often you'll find you need to tweak how a block is rendered per theme to match each design.
@@ -67,6 +69,7 @@ in the same directory and file name.
 There are many things you can customize in these files, most of which are self explanatory, while some could use a little explaining.
 
 - `$icon` this is the shortcode for any [dashicon](https://developer.wordpress.org/resource/dashicons/)
+- `$category` should always be "embold" so that all of our custom blocks are grouped together in the editor.
 - The `$post_types` and `$parent` arrays let you specify what post types and what types of other blocks your block can be embedded in.
 - The `public $styles` array is used to add different options for styles to use when building out the template. By default it has a light and dark mode. 
 - The `public $example` array is used to provide example data that the client can see when they first add the block to a template.
