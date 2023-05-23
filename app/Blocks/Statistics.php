@@ -92,14 +92,14 @@ class Statistics extends CustomBlock
      * @var array
      */
     public $supports = [
-        'align' => true,
+        'align' => false,
         'align_text' => false,
         'align_content' => false,
         'full_height' => false,
         'anchor' => false,
-        'mode' => false,
+        'mode' => true,
         'multiple' => true,
-        'jsx' => true,
+        'jsx' => false,
         'spacing' => false,
     ];
 
@@ -137,19 +137,19 @@ class Statistics extends CustomBlock
         'statistics' => [
             [
                 'number' => '0000',
-                'description' => 'Plugin small description'
+                'description' => '<p>Theme small</p><p>description here</p>'
             ],
             [
                 'number' => '0001',
-                'description' => 'Stat small description'
+                'description' => '<p>Stat small</p><p>description here</p>'
             ],
             [
                 'number' => '0002',
-                'description' => 'Stat small description'
+                'description' => '<p>Stat small</p><p>description here</p>'
             ],
             [
                 'number' => '0003',
-                'description' => 'Stat small description'
+                'description' => '<p>Stat small</p><p>description here</p>'
             ],
         ],
     ];
@@ -183,7 +183,7 @@ class Statistics extends CustomBlock
             ])
             ->addRepeater('statistics')
                 ->addText('number')
-                ->addText('description')
+                ->addWysiwyg('description')
             ->endRepeater();
 
         return $statistics->build();
