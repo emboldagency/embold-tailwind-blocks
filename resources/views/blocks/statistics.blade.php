@@ -1,10 +1,10 @@
 <div class="{{ $block->classes }} {{ $padding }}">
     @if ($statistics)
         @if ($block->style == 'list')
-            <div class="py-6 md:px-6 border-gray-100 border">
+            <div class="p-6 border-gray-100 border">
                 @foreach ($statistics as $statistic)
                     <div class="flex items-center gap-x-6 py-3">
-                        <div class="text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
+                        <div class="text-4xl font-bold italic whitespace-nowrap text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
                         <div class="px-2 uppercase text-xs lg:text-base">{!! $statistic['description'] !!}</div>
                     </div>
                 @endforeach
