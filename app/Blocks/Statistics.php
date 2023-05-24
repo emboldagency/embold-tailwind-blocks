@@ -3,9 +3,8 @@
 namespace App\Blocks;
 
 use App\CustomBlock;
-use StoutLogic\AcfBuilder\FieldsBuilder;
-
 use App\Fields\Padding;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Statistics extends CustomBlock
 {
@@ -100,7 +99,6 @@ class Statistics extends CustomBlock
         'mode' => true,
         'multiple' => true,
         'jsx' => false,
-        'spacing' => false,
     ];
 
     /**
@@ -125,7 +123,7 @@ class Statistics extends CustomBlock
         [
             'name' => 'full-width',
             'label' => 'Full Width',
-        ]
+        ],
     ];
 
     /**
@@ -137,19 +135,19 @@ class Statistics extends CustomBlock
         'statistics' => [
             [
                 'number' => '0000',
-                'description' => '<p>Theme small</p><p>description here</p>'
+                'description' => '<p>Theme small</p><p>description here</p>',
             ],
             [
                 'number' => '0001',
-                'description' => '<p>Stat small</p><p>description here</p>'
+                'description' => '<p>Stat small</p><p>description here</p>',
             ],
             [
                 'number' => '0002',
-                'description' => '<p>Stat small</p><p>description here</p>'
+                'description' => '<p>Stat small</p><p>description here</p>',
             ],
             [
                 'number' => '0003',
-                'description' => '<p>Stat small</p><p>description here</p>'
+                'description' => '<p>Stat small</p><p>description here</p>',
             ],
         ],
     ];
@@ -161,10 +159,13 @@ class Statistics extends CustomBlock
      */
     public function with()
     {
+        // Append classes to the blocks class list to clear floats
+        $this->classes .= ' before:table before:clear-both';
+
         return [
             'featured_background' => get_field('featured_background'),
             'statistics' => $this->statistics(),
-            'padding' => Padding::value()
+            'padding' => Padding::value(),
         ];
     }
 
@@ -182,8 +183,8 @@ class Statistics extends CustomBlock
                 'return_format' => 'url',
             ])
             ->addRepeater('statistics')
-                ->addText('number')
-                ->addWysiwyg('description')
+            ->addText('number')
+            ->addWysiwyg('description')
             ->endRepeater();
 
         return $statistics->build();
@@ -206,6 +207,7 @@ class Statistics extends CustomBlock
      */
     public function enqueue()
     {
-        //
+        // Load the default JS file or our JS file automagically
+        parent::enqueue();
     }
 }

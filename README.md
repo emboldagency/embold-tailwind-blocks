@@ -57,6 +57,13 @@ Block views are stored inside of `resources/views/blocks/{block-name}.blade.php`
 copy this file directly over to your themes `resources/views/blocks` directory and start modifying it. The theme version will 
 always override the version found in the plugin.
 
+## Customizing Block JavaScript in your Sage10 theme
+
+Some blocks come with a JavaScript file that you can copy over to your theme and override.
+
+These JavaScript files are named after the block slug similar to blade files, and are stored inside of `resources/scripts/blocks/{block-name}.js`.
+This file can be copied into your theme in the same directory and customized as needed. The theme version will  always override the version found in the plugin.
+
 ## Customizing a Block class in your Sage10 theme
 
 You may need to modify what ACF fields are in a block, or how the data is being manipulate on its way to the frontend.

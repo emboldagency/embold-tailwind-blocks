@@ -8,6 +8,28 @@ use Illuminate\Support\Str;
 
 abstract class CustomBlock extends Block {
 
+    public function enqueue()
+    {
+        $enqueue_js_file = str_replace('/includes', '', plugin_dir_path(__FILE__) . "resources/scripts/blocks/{$this->slug}.js");
+
+        if (file_exists($enqueue_js_file)) {
+            // Check if the theme has overridden the JavaScript file
+            $theme_js_file = get_template_directory() . "/resources/scripts/blocks/{$this->slug}.js";
+
+            // Check for the compiled js file
+            $theme_js_public_path = get_template_directory() . '/public/scripts/blocks';
+            $compiled_js_files = glob($theme_js_public_path . "/{$this->slug}.*js");
+
+            if ($compiled_js_files && $theme_js_file) {
+                $enqueue_js_file = get_template_directory_uri() . '/public/scripts/blocks/' . basename($compiled_js_files[0]);
+            } else {
+                $enqueue_js_file = plugins_url("embold-tailwind-blocks/resources/scripts/blocks/{$this->slug}.js");
+            }
+
+            wp_enqueue_script("embold-tailwind-blocks-{$this->slug}-js", $enqueue_js_file, [], '1.0', true);
+        }
+    }
+
     public function render($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false)
     {
         $this->block = (object) $block;
