@@ -16,7 +16,7 @@
                 <div class="grid grid-cols-2 gap-[1px] bg-gray-100">
                     @foreach ($statistics as $statistic)
                         <div class="flex flex-col items-center justify-center py-6 px-4 text-center bg-white">
-                            <div class="text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
+                            <div class="pb-2 text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
                             <div class="px-2 uppercase text-xs lg:text-base">{!! $statistic['description'] !!}</div>
                         </div>
                     @endforeach
@@ -39,17 +39,17 @@
             <div class="hidden md:flex flex-wrap items-center justify-center gap-x-4 gap-y-4">
                 @foreach ($statistics as $statistic)
                     <div class="flex flex-col items-center justify-center text-center @unless ($loop->last) border-r border-gray-100 @endunless" style="background-image: url('{{ $featured_background }}')">
-                        <div class="text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
+                        <div class="pb-2 text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
                         <div class="px-2 uppercase text-xs lg:text-base">{!! $statistic['description'] !!}</div>
                     </div>
                 @endforeach
             </div>
 
             <!-- display as list on mobile -->
-            <div class="md:hidden py-6 md:px-6 border-gray-100 border">
+            <div class="md:hidden p-6 border-gray-100 border">
                 @foreach ($statistics as $statistic)
                     <div class="flex items-center gap-x-6 py-3">
-                        <div class="text-4xl font-bold italic text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
+                        <div class="text-4xl font-bold italic whitespace-nowrap text-purple lg:text-6xl">{{ $statistic['number'] }}</div>
                         <div class="px-2 uppercase text-xs lg:text-base">{!! $statistic['description'] !!}</div>
                     </div>
                 @endforeach

@@ -6,21 +6,21 @@ use App\CustomBlock;
 use App\Fields\Padding;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class Statistics extends CustomBlock
+class Accordion extends CustomBlock
 {
     /**
      * The block name.
      *
      * @var string
      */
-    public $name = 'Statistics';
+    public $name = 'Accordion';
 
     /**
      * The block description.
      *
      * @var string
      */
-    public $description = 'A simple Statistics block.';
+    public $description = 'A simple Accordion block.';
 
     /**
      * The block category.
@@ -34,7 +34,7 @@ class Statistics extends CustomBlock
      *
      * @var string|array
      */
-    public $icon = 'image-filter';
+    public $icon = 'editor-ul';
 
     /**
      * The block keywords.
@@ -91,14 +91,14 @@ class Statistics extends CustomBlock
      * @var array
      */
     public $supports = [
-        'align' => false,
+        'align' => true,
         'align_text' => false,
         'align_content' => false,
         'full_height' => false,
         'anchor' => false,
         'mode' => true,
         'multiple' => true,
-        'jsx' => false,
+        'jsx' => true,
     ];
 
     /**
@@ -106,25 +106,7 @@ class Statistics extends CustomBlock
      *
      * @var array
      */
-    public $styles = [
-        [
-            'name' => 'list',
-            'label' => 'List',
-            'isDefault' => true,
-        ],
-        [
-            'name' => 'grid',
-            'label' => 'Grid',
-        ],
-        [
-            'name' => 'featured',
-            'label' => 'Featured',
-        ],
-        [
-            'name' => 'full-width',
-            'label' => 'Full Width',
-        ],
-    ];
+    public $styles = [];
 
     /**
      * The block preview example data.
@@ -132,24 +114,7 @@ class Statistics extends CustomBlock
      * @var array
      */
     public $example = [
-        'statistics' => [
-            [
-                'number' => '0000',
-                'description' => '<p>Theme small</p><p>description here</p>',
-            ],
-            [
-                'number' => '0001',
-                'description' => '<p>Stat small</p><p>description here</p>',
-            ],
-            [
-                'number' => '0002',
-                'description' => '<p>Stat small</p><p>description here</p>',
-            ],
-            [
-                'number' => '0003',
-                'description' => '<p>Stat small</p><p>description here</p>',
-            ],
-        ],
+        'title' => 'H3 Style Lorem Ipsum Dolor Sit Amet',
     ];
 
     /**
@@ -159,13 +124,20 @@ class Statistics extends CustomBlock
      */
     public function with()
     {
-        // Append classes to the blocks class list to clear floats
-        $this->classes .= ' before:table before:clear-both';
+        // Make sure this is only true on the first instance of the accordion block.
+        $is_first_accordion_instance = ! get_query_var('is_first_accordion_instance', false);
+
+        // This is no longer needed, but I'm leaving it in as an example
+        // of how you can add code (maybe a <style> section) to only the
+        // first instance of a block on the page.
+        if ($is_first_accordion_instance) {
+            set_query_var('is_first_accordion_instance', true);
+        }
 
         return [
-            'featured_background' => get_field('featured_background'),
-            'statistics' => $this->statistics(),
+            'title' => $this->title(),
             'padding' => Padding::value(),
+            'inline_style' => $is_first_accordion_instance,
         ];
     }
 
@@ -176,18 +148,11 @@ class Statistics extends CustomBlock
      */
     public function fields()
     {
-        $statistics = new FieldsBuilder('statistics');
+        $accordion = new FieldsBuilder('accordion_title');
 
-        $statistics
-            ->addImage('featured_background', [
-                'return_format' => 'url',
-            ])
-            ->addRepeater('statistics')
-            ->addText('number')
-            ->addWysiwyg('description')
-            ->endRepeater();
+        $accordion->addText('accordion_title');
 
-        return $statistics->build();
+        return $accordion->build();
     }
 
     /**
@@ -195,9 +160,9 @@ class Statistics extends CustomBlock
      *
      * @return array
      */
-    public function statistics()
+    public function title()
     {
-        return get_field('statistics') ?: $this->example['statistics'];
+        return get_field('accordion_title') ?: $this->example['title'];
     }
 
     /**
@@ -207,7 +172,29 @@ class Statistics extends CustomBlock
      */
     public function enqueue()
     {
-        // Load the default JS file or our theme JS file automagically
-        parent::enqueue();
+        global $is_first_accordion_instance;
+        $is_first_accordion_instance = true;
+
+        add_filter('render_block', [$this, 'add_custom_style_to_first_accordion_instance'], 10, 2);
+    }
+
+    /**
+     * Add custom style to the first accordion instance.
+     *
+     * @param  string  $block_content The block content.
+     * @param  array  $block         The block data.
+     * @return string
+     */
+    public function add_custom_style_to_first_accordion_instance($block_content, $block)
+    {
+        global $is_first_accordion_instance;
+
+        if ($is_first_accordion_instance && $block['blockName'] === 'app/accordion') {
+            $style = '<style>body { color: red; }</style>';
+            $block_content = $style . $block_content;
+            $is_first_accordion_instance = false;
+        }
+
+        return $block_content;
     }
 }

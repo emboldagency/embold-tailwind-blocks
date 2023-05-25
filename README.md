@@ -83,6 +83,12 @@ There are many things you can customize in these files, most of which are self e
 - The `public function fields()` method is for building out ACF fields used just in this block. Reference this [cheat sheet](https://github.com/Log1x/acf-builder-cheatsheet) for help with how to do the different fields.
 - The `public function items()` method is something that can be copied for more of your properties you wish to return to the frontend. You'll notice in the `with()` method we're referencing items as `$this➝items()` which is a direct call to this method. The example one each block comes with is showing you that you can use a ternary to send either the ACF value if it exists, or the example value if it is blank. You can use these methods to transform your data before passing it to the frontend. For every field you can add a method like this to help manipulate the data.
 
+## Bundled Styling for blocks
+
+In the `resources/styles/blocks` directory you'll find some .css files that match up with the slug naming of blocks. These
+files are not loaded into the site by default but are bundled in so you can copy/paste them over to have a good starting
+poing.
+
 ## Adding new Blocks to the plugin
 
 You will start off by duplicaing one of the exsting class files from `app/Blocks` and view files from `resources/views/blocks`.
