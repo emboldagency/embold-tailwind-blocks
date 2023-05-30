@@ -9,9 +9,10 @@ class InitBlocks
     public static function initialize(Application $app)
     {
         $block_classes = [
+            // alphabetical please
+            \App\Blocks\Accordion::class,
+            \App\Blocks\Button::class,
             \App\Blocks\Statistics::class,
-            // \App\Blocks\Button::class,
-            // \App\Blocks\Accordion::class,
             // Add more block classes here
         ];
 
