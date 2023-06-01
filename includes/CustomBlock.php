@@ -5,6 +5,7 @@ namespace App;
 use Log1x\AcfComposer\Block;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 abstract class CustomBlock extends Block {
 
@@ -21,7 +22,11 @@ abstract class CustomBlock extends Block {
             $compiled_js_files = glob($theme_js_public_path . "/{$this->slug}.*js");
 
             if ($compiled_js_files && $theme_js_file) {
-                $enqueue_js_file = get_template_directory_uri() . '/public/scripts/blocks/' . basename($compiled_js_files[0]);
+                ## Add a check into the manifest to see if the key exists
+                $manifest = json_decode(file_get_contents(get_template_directory() . '/public/manifest.json'), true);
+                $manifest_key = Arr::get($manifest, 'scripts/blocks/' . $this->slug . '.js');
+                
+                $enqueue_js_file = get_template_directory_uri() . '/public/' . $manifest_key;
             } else {
                 $enqueue_js_file = plugins_url("embold-tailwind-blocks/resources/scripts/blocks/{$this->slug}.js");
             }
