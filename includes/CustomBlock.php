@@ -11,12 +11,12 @@ abstract class CustomBlock extends Block {
 
     public function enqueue()
     {
-        $enqueue_js_file = str_replace('/includes', '', plugin_dir_path(__FILE__) . "resources/scripts/blocks/{$this->slug}.js");
+        $plugin_js_file = str_replace('/includes', '', plugin_dir_path(__FILE__) . "resources/scripts/blocks/{$this->slug}.js");
 
-        if (file_exists($enqueue_js_file)) {
-            // Check if the theme has overridden the JavaScript file
-            $theme_js_file = get_template_directory() . "/resources/scripts/blocks/{$this->slug}.js";
+        // Check if the theme has overridden the JavaScript file, or has one in general
+        $theme_js_file = get_template_directory() . "/resources/scripts/blocks/{$this->slug}.js";
 
+        if (file_exists($plugin_js_file) || file_exists($theme_js_file)) {
             // Check for the compiled js file
             $theme_js_public_path = get_template_directory() . '/public/scripts/blocks';
             $compiled_js_files = glob($theme_js_public_path . "/{$this->slug}.*js");
@@ -25,8 +25,9 @@ abstract class CustomBlock extends Block {
                 ## Add a check into the manifest to see if the key exists
                 $manifest = json_decode(file_get_contents(get_template_directory() . '/public/manifest.json'), true);
                 $manifest_key = Arr::get($manifest, 'scripts/blocks/' . $this->slug . '.js');
-                
+                    
                 $enqueue_js_file = get_template_directory_uri() . '/public/' . $manifest_key;
+
             } else {
                 $enqueue_js_file = plugins_url("embold-tailwind-blocks/resources/scripts/blocks/{$this->slug}.js");
             }
