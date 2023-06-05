@@ -12,7 +12,10 @@ class InitBlocks
             // alphabetical please
             \App\Blocks\Accordion::class,
             \App\Blocks\Button::class,
+            \App\Blocks\Slider::class,
             \App\Blocks\Statistics::class,
+            \App\Blocks\TestimonialMultiple::class,
+            \App\Blocks\TestimonialSingle::class,
             // Add more block classes here
         ];
 
