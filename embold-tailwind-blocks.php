@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
- * Version:            0.9.1
+ * Version:            0.9.2
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -31,10 +31,12 @@ $embold_update_checker = PucFactory::buildUpdateChecker(
 );
 
 $update_key_url = 'https://embold.net/api/wp-plugin-key';
-$update_key = file_get_contents($update_key_url);
+$update_key = @trim(file_get_contents($update_key_url));
 
-$embold_update_checker->setAuthentication($update_key);
-$embold_update_checker->getVcsApi()->enableReleaseAssets();
+if ($update_key) {
+    $embold_update_checker->setAuthentication($update_key);
+    $embold_update_checker->getVcsApi()->enableReleaseAssets();
+}
 
 // Plugin initialization
 function embold_tailwind_blocks_init() {
