@@ -3,7 +3,7 @@ Contributors: itsjsutxan
 Tags: tailwind, blocks
 Requires at least: 6.0
 Tested up to: 6.2.2
-Stable tag: 0.9.0
+Stable tag: 0.9.1
 Requires PHP: 8.0
 
 A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
@@ -21,10 +21,13 @@ Please view the full README.md on GitHub.
 
 == Changelog ==
 
+= 0.9.1 =
+* Give plugin unique identifier
+
 = 0.9.0 =
 * Add plugin update ability
 
 == Upgrade Notice ==
 
-= 0.9.0 =
-The plugin can no be updated automatically.
+= 0.9.1 =
+The plugin now has a unique identifier to allow updating.

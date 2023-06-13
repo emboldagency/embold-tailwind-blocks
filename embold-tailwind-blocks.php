@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
- * Version:            0.9.0
+ * Version:            0.9.1
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -25,9 +25,9 @@ require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $embold_update_checker = PucFactory::buildUpdateChecker(
-	'https://github.com/emboldagency/embold-wordpress-tweaks/',
+	'https://github.com/emboldagency/embold-tailwind-blocks/',
 	__FILE__,
-	'embold-wordpress-tweaks'
+	'embold-tailwind-blocks'
 );
 
 $update_key_url = 'https://embold.net/api/wp-plugin-key';
