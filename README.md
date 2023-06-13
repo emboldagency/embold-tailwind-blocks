@@ -4,7 +4,7 @@
 
 ## What does it do?
 
-It extracts the acf-composer and acf-builder packages that Sage built on into a plugin. We can include our own default 
+This plugin utilizes the acf-composer and acf-builder packages and allows us to include our own default 
 Block and Field classes in the plugin files to jumpstart theme development.
 
 If for some reason you need to tweak or modify what comes with the plugin you can copy the file into your theme and tweak it.
@@ -91,7 +91,9 @@ poing.
 
 ## Adding new Blocks to the plugin
 
-You will start off by duplicaing one of the exsting class files from `app/Blocks` and view files from `resources/views/blocks`.
+You will start off by duplicaing one of the existing class files from `app/Blocks` and view files from `resources/views/blocks`.
+
+Make sure your block for the plugin inherits our custom block class and not the default sage class, check the top of the block class file.
 
 Configure the class and the view in a customizable format, ideally something that can be re-used. For example, if your block requires the use
 of images, add an image field where applicable so this can be changed per theme.
