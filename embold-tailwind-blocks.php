@@ -3,8 +3,8 @@
  * @wordpress-plugin
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
- * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
- * Version:            0.9.3
+ * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates. REQUIRES ACF to be enabled!
+ * Version:            0.9.5
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -20,6 +20,14 @@ require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 // Include the main plugin class
 require_once plugin_dir_path(__FILE__) . 'includes/EmboldTailwindBlocks.php';
+
+// Check if ACF or ACF Pro is active, deactivate our plugin if not
+include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+if (!is_plugin_active('advanced-custom-fields/acf.php') && !is_plugin_active('advanced-custom-fields-pro/acf.php')) {
+    // Deactivate the plugin
+    deactivate_plugins(plugin_basename(__FILE__));
+    return;
+}
 
 require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
