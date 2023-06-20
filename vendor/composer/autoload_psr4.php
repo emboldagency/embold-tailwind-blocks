@@ -67,6 +67,7 @@ return array(
     'Doctrine\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Inflector'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
+    'App\\Fields\\' => array($baseDir . '/app/Fields'),
     'App\\Blocks\\' => array($baseDir . '/app/Blocks'),
     'App\\' => array($baseDir . '/includes'),
 );

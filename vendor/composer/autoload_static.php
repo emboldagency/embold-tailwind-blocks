@@ -131,6 +131,7 @@ class ComposerStaticInit947b9a9fbd83924d8905cf66df7bb280
         ),
         'A' => 
         array (
+            'App\\Fields\\' => 11,
             'App\\Blocks\\' => 11,
             'App\\' => 4,
         ),
@@ -383,6 +384,10 @@ class ComposerStaticInit947b9a9fbd83924d8905cf66df7bb280
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'App\\Fields\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Fields',
         ),
         'App\\Blocks\\' => 
         array (
