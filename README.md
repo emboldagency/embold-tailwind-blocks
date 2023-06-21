@@ -62,7 +62,7 @@ always override the version found in the plugin.
 Our blocks use our own custom class [App\CustomBlock](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php) that extends the default [Log1x\AcfComposer\Block](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/vendor/log1x/acf-composer/src/Block.php) class that Sage typically uses. 
 This allows us to do a few different things that we normally wouldn't be able to do.
 
-First, ensure that your the blocks class declaration file (example: /resources/app/Blocks/ExampleBlock.php) uses our custom class and not the default.
+First, ensure that the blocks class declaration file (example: /resources/app/Blocks/ExampleBlock.php) uses our custom class and not the default.
 
 #### :heavy_check_mark: Correct
 
@@ -83,10 +83,10 @@ class Accordion extends Block
 
 ### Automatic JavaScript File Loading
 
-We have extended the default `enqueue()` method in our CustomBlock class to automatically load JavaScript files based on their "slug" format naming. 
+Now that we're using our `CustomBlock` class, we have our extension of the `enqueue()` method which will automatically load JavaScript files based on their "slug" format naming. 
 For example a HeroSlider.php block would automatically look for and try to load a `/resources/scripts/blocks/hero-slider.js` - but only if the file exists.
 
-This means you do not need to manually import each .js file in your app.js. Loading your JavaScript files in app.js includes the code for your block on every page,
+One of the benefits of this is that you do not need to manually import each .js file in your app.js. Loading your JavaScript files in app.js includes the code for your block on every page,
 regardless of your block being called on the page or not. By using our automatic file loading method, the JavaScript file is only loaded on pages that call your block,
 and only once per page.
 
@@ -98,14 +98,14 @@ app.entry({
         app: ['@scripts/app', '@styles/app'],
         editor: ['@scripts/editor', '@styles/editor'],
         slider: ['@scripts/blocks/slider'],
-        'testimonial-multiple': ['@scripts/blocks/testimonial-multiple'],
+        'hero-slider': ['@scripts/blocks/hero-slider'],
     })
 ```
 
-Our [custom enqueue() method](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php#L12) will look for your files key in the manifest.json so that
-it will always load the correct version if it while in development or production.
+Our [custom enqueue() method](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php#L12) will actually look for your files key in the manifest.json and 
+load it based on the value pair so that it will always load the correct version while in development or production.
 
-### Included JavaScript Files
+### Already Included JavaScript Files
 
 Some of our plugins blocks already come with a JavaScript file in the plugins `/resources/scripts/blocks` directory that you can copy over to your themes `/resources/scripts/blocks` and override.
 We have tried to leave the default functionality in these files barebones so they can be easily tweaked and extended for each themes use case.
