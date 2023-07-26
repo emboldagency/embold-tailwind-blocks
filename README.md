@@ -57,12 +57,60 @@ Block views are stored inside of `resources/views/blocks/{block-name}.blade.php`
 copy this file directly over to your themes `resources/views/blocks` directory and start modifying it. The theme version will 
 always override the version found in the plugin.
 
-## Customizing Block JavaScript in your Sage10 theme
+## Block JavaScript
 
-Some blocks come with a JavaScript file that you can copy over to your theme and override.
+Our blocks use our own custom class [App\CustomBlock](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php) that extends the default [Log1x\AcfComposer\Block](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/vendor/log1x/acf-composer/src/Block.php) class that Sage typically uses. 
+This allows us to do a few different things that we normally wouldn't be able to do.
 
-These JavaScript files are named after the block slug similar to blade files, and are stored inside of `resources/scripts/blocks/{block-name}.js`.
-This file can be copied into your theme in the same directory and customized as needed. The theme version will  always override the version found in the plugin.
+First, ensure that the blocks class declaration file (example: /resources/app/Blocks/ExampleBlock.php) uses our custom class and not the default.
+
+#### :heavy_check_mark: Correct
+
+```php
+use App\CustomBlock;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Accordion extends CustomBlock
+```
+
+#### :x: Incorrect
+```php
+use Log1x\AcfComposer\Block;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Accordion extends Block
+```
+
+### Automatic JavaScript File Loading
+
+Now that we're using our `CustomBlock` class, we have our extension of the `enqueue()` method which will automatically load JavaScript files based on their "slug" format naming. 
+For example a HeroSlider.php block would automatically look for and try to load a `/resources/scripts/blocks/hero-slider.js` - but only if the file exists.
+
+One of the benefits of this is that you do not need to manually import each .js file in your app.js. Loading your JavaScript files in app.js includes the code for your block on every page,
+regardless of your block being called on the page or not. By using our automatic file loading method, the JavaScript file is only loaded on pages that call your block,
+and only once per page.
+
+If you have a JavaScript file for your block you can add it to the Sage `bud.config.js` array of entrypoints. The example below shows how to add both single word files, 
+as well as files that may contain a hyphen. This will run your files through the same process as the app.js but output into their own compiled versions.
+
+```js
+app.entry({
+        app: ['@scripts/app', '@styles/app'],
+        editor: ['@scripts/editor', '@styles/editor'],
+        slider: ['@scripts/blocks/slider'],
+        'hero-slider': ['@scripts/blocks/hero-slider'],
+    })
+```
+
+Our [custom enqueue() method](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php#L12) will actually look for your files key in the manifest.json and 
+load it based on the value pair so that it will always load the correct version while in development or production.
+
+### Already Included JavaScript Files
+
+Some of our plugins blocks already come with a JavaScript file in the plugins `/resources/scripts/blocks` directory that you can copy over to your themes `/resources/scripts/blocks` and override.
+We have tried to leave the default functionality in these files barebones so they can be easily tweaked and extended for each themes use case.
+
+As always, the theme version of JavaScript files will always override the version found in the plugin.
 
 ## Customizing a Block class in your Sage10 theme
 
@@ -85,15 +133,32 @@ There are many things you can customize in these files, most of which are self e
 
 ## Bundled Styling for blocks
 
-In the `resources/styles/blocks` directory you'll find some .css files that match up with the slug naming of blocks. These
-files are not loaded into the site by default but are bundled in so you can copy/paste them over to have a good starting
-poing.
+In the plugins `/resources/styles/blocks` directory you'll find some .css files that match up with the "slug" naming of blocks. These
+files are not loaded into the site by default but are bundled in so you can copy/paste them over to your themes `/resources/styles/blocks` to have a good starting
+point.
 
 ## Adding new Blocks to the plugin
 
-You will start off by duplicaing one of the existing class files from `app/Blocks` and view files from `resources/views/blocks`.
+If you're adding a new block to the plugin itself, start off by duplicaing one of the existing class files from `app/Blocks` and view files from `resources/views/blocks`.
 
 Make sure your block for the plugin inherits our custom block class and not the default sage class, check the top of the block class file.
+
+#### :heavy_check_mark: Correct
+
+```php
+use App\CustomBlock;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Accordion extends CustomBlock
+```
+
+#### :x: Incorrect
+```php
+use Log1x\AcfComposer\Block;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Accordion extends Block
+```
 
 Configure the class and the view in a customizable format, ideally something that can be re-used. For example, if your block requires the use
 of images, add an image field where applicable so this can be changed per theme.
