@@ -6,14 +6,23 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         sliderDelay = 0;
     }
-    setTimeout(function () {
-        new Splide('.testimonial-splide', {
-            autoplay: true,
-            type: 'fade',
-            rewind: true,
-            gap: '2rem',
-            arrows: false,
-            lazyLoad: 'nearby',
-        }).mount();
-    }, sliderDelay);
+
+    // Check if .testimonial-splide element exists in the DOM
+    const testimonialSplideElement = document.querySelector('.testimonial-splide');
+
+    if (testimonialSplideElement && typeof Splide !== 'undefined') {
+        setTimeout(function () {
+            // Check again if Splide is not null before creating an instance
+            if (Splide !== null) {
+                new Splide(testimonialSplideElement, {
+                    autoplay: true,
+                    type: 'fade',
+                    rewind: true,
+                    gap: '2rem',
+                    arrows: false,
+                    lazyLoad: 'nearby',
+                }).mount();
+            }
+        }, sliderDelay);
+    }
 });

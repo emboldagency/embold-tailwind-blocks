@@ -6,14 +6,23 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     sliderDelay = 0;
   }
-  setTimeout(function () {
-    new Splide(".hero-splide", {
-      autoplay: true,
-      type: "fade",
-      rewind: true,
-      gap: "2rem",
-      arrows: false,
-      lazyLoad: "nearby",
-    }).mount();
-  }, sliderDelay);
+
+  // Check if .hero-splide element exists in the DOM
+  const heroSplideElement = document.querySelector(".hero-splide");
+
+  if (heroSplideElement && typeof Splide !== "undefined") {
+    setTimeout(function () {
+      // Check again if Splide is not null before creating an instance
+      if (Splide !== null) {
+        new Splide(heroSplideElement, {
+          autoplay: true,
+          type: "fade",
+          rewind: true,
+          gap: "2rem",
+          arrows: false,
+          lazyLoad: "nearby",
+        }).mount();
+      }
+    }, sliderDelay);
+  }
 });

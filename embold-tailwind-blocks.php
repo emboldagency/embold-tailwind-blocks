@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks, written with ACF Composer and Blade Templates. REQUIRES ACF to be enabled!
- * Version:            0.9.5
+ * Version:            0.9.6
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
