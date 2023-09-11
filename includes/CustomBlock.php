@@ -9,6 +9,25 @@ use Illuminate\Support\Arr;
 
 abstract class CustomBlock extends Block {
 
+    protected $defaultIconBackground = '#fff';
+    protected $defaultIconForeground = '#009dff';
+
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        if (is_string($this->icon)) {
+            $this->icon = [
+                'src' => $this->icon,
+                'background' => $this->defaultIconBackground,
+                'foreground' => $this->defaultIconForeground,
+            ];
+        }
+
+        $this->icon['background'] = $this->defaultIconBackground;
+        $this->icon['foreground'] = $this->defaultIconForeground;
+    }
+    
     public function enqueue()
     {
         $plugin_js_file = str_replace('/includes', '', plugin_dir_path(__FILE__) . "resources/scripts/blocks/{$this->slug}.js");
