@@ -1,6 +1,4 @@
-# We'll build our own ACF/Block Composer...
-
-![Bender from Futurama](https://media.giphy.com/media/cYhhUmbtbneb6/giphy.gif)
+# emBold Enhanced ACF/Block Composer
 
 ## What does it do?
 
