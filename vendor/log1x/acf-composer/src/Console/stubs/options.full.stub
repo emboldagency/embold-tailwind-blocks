@@ -2,8 +2,8 @@
 
 namespace DummyNamespace;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Options as Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Field
 {
@@ -43,6 +43,13 @@ class DummyClass extends Field
     public $position = PHP_INT_MAX;
 
     /**
+     * The option page visibility in the admin menu.
+     *
+     * @var boolean
+     */
+    public $menu = true;
+
+    /**
      * The slug of another admin page to be used as a parent.
      *
      * @var string
@@ -78,33 +85,34 @@ class DummyClass extends Field
     public $autoload = true;
 
     /**
-     * Localized text displayed on the submit button.
+     * The additional option page settings.
      *
-     * @return string
+     * @var array
      */
-    public function updateButton()
+    public $settings = [];
+
+    /**
+     * Localized text displayed on the submit button.
+     */
+    public function updateButton(): string
     {
         return __('Update', 'acf');
     }
 
     /**
      * Localized text displayed after form submission.
-     *
-     * @return string
      */
-    public function updatedMessage()
+    public function updatedMessage(): string
     {
         return __('DummyTitle Updated', 'acf');
     }
 
     /**
      * The option page field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->addRepeater('items')

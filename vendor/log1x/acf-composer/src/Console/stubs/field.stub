@@ -2,19 +2,17 @@
 
 namespace DummyNamespace;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Field
 {
     /**
      * The field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->setLocation('post_type', '==', 'post');

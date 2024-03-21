@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Button extends CustomBlock
 {
@@ -119,7 +119,7 @@ class Button extends CustomBlock
         [
             'name' => 'ghost',
             'label' => 'Ghost',
-        ]
+        ],
     ];
 
     /**
@@ -155,12 +155,12 @@ class Button extends CustomBlock
      */
     public function fields()
     {
-        $button = new FieldsBuilder('button');
+        $button = Builder::make('button');
 
         $button->addTrueFalse('full_width', [
-                'default_value' => 0,
-                'label' => 'Full Width',
-            ])
+            'default_value' => 0,
+            'label' => 'Full Width',
+        ])
             ->addText('link')
             ->addText('text');
 
@@ -172,7 +172,7 @@ class Button extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         //
     }

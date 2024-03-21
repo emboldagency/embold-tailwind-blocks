@@ -19,7 +19,6 @@ class PackageManifest extends FoundationPackageManifest
     /**
      * Create a new package manifest instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string[]  $composerPaths
      * @param  string  $manifestPath
      * @return void
@@ -34,16 +33,17 @@ class PackageManifest extends FoundationPackageManifest
     /**
      * Get a package name based on its provider
      *
-     * @param string $provider_name
+     * @param  string  $providerName
      * @return string
+     *
      * @throws FileNotFoundException
      * @throws Exception
      */
-    public function getPackage($provider_name)
+    public function getPackage($providerName)
     {
         foreach ($this->getManifest() as $package => $configuration) {
             foreach ($configuration['providers'] ?? [] as $provider) {
-                if ($provider !== $provider_name) {
+                if ($provider !== $providerName) {
                     continue;
                 }
 
@@ -64,7 +64,7 @@ class PackageManifest extends FoundationPackageManifest
         $packages = array_reduce($this->composerPaths, function ($all, $composerPath) {
             $packages = [];
 
-            $path = "${composerPath}/vendor/composer/installed.json";
+            $path = "{$composerPath}/vendor/composer/installed.json";
 
             if ($this->files->exists($path)) {
                 $installed = json_decode($this->files->get($path), true);
@@ -72,20 +72,20 @@ class PackageManifest extends FoundationPackageManifest
                 $packages = $installed['packages'] ?? $installed;
             }
 
-            $packages[] = json_decode($this->files->get("${composerPath}/composer.json"), true);
+            $packages[] = json_decode($this->files->get("{$composerPath}/composer.json"), true);
 
             $ignoreAll = in_array('*', $ignore = $this->packagesToIgnore());
 
-            return collect($packages)->mapWithKeys(function ($package) use ($path, $composerPath) {
-                return [
-                    $this->format($package['name'] ?? basename($composerPath), dirname($path, 2)) =>
-                        $package['extra']['acorn'] ?? $package['extra']['laravel'] ?? []
-                ];
-            })->each(function ($configuration) use (&$ignore) {
-                $ignore = array_merge($ignore, $configuration['dont-discover'] ?? []);
-            })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
-                return $ignoreAll || in_array($package, $ignore);
-            })->filter()->merge($all)->all();
+            return collect($packages)->mapWithKeys(fn ($package) => [
+                $this->format($package['name'] ?? basename($composerPath), dirname($path, 2)) => $package['extra']['acorn'] ?? $package['extra']['laravel'] ?? [],
+            ])
+                ->each(function ($configuration) use (&$ignore) {
+                    $ignore = array_merge($ignore, $configuration['dont-discover'] ?? []);
+                })
+                ->reject(fn ($configuration, $package) => $ignoreAll || in_array($package, $ignore))
+                ->filter()
+                ->merge($all)
+                ->all();
         }, []);
 
         $this->write($packages);
@@ -100,7 +100,7 @@ class PackageManifest extends FoundationPackageManifest
      */
     protected function format($package, $vendorPath = null)
     {
-        return str_replace($vendorPath . '/', '', $package);
+        return str_replace($vendorPath.'/', '', $package);
     }
 
     /**
@@ -111,7 +111,7 @@ class PackageManifest extends FoundationPackageManifest
     protected function packagesToIgnore()
     {
         return array_reduce($this->composerPaths, function ($ignore, $composerPath) {
-            $path = "${composerPath}/composer.json";
+            $path = "{$composerPath}/composer.json";
 
             if (! $this->files->exists($path)) {
                 return $ignore;

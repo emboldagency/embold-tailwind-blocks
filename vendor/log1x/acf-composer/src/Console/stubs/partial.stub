@@ -2,19 +2,17 @@
 
 namespace DummyNamespace;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Partial;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Partial
 {
     /**
      * The partial field group.
-     *
-     * @return \StoutLogic\AcfBuilder\FieldsBuilder
      */
-    public function fields()
+    public function fields(): Builder
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->addRepeater('items')

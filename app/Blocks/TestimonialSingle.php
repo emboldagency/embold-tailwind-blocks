@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class TestimonialSingle extends CustomBlock
 {
@@ -141,7 +141,7 @@ class TestimonialSingle extends CustomBlock
      */
     public function fields()
     {
-        $testimonialSingle = new FieldsBuilder('testimonial_single');
+        $testimonialSingle = Builder::make('testimonial_single');
 
         $testimonialSingle->addText('quote')
             ->addWysiwyg('author')
@@ -160,7 +160,7 @@ class TestimonialSingle extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         //
     }

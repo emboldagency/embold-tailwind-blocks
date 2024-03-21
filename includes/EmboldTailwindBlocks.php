@@ -3,30 +3,42 @@
 namespace App;
 
 use Illuminate\Config\Repository as ConfigRepository;
-use Roots\Acorn\Application;
+use Log1x\AcfComposer\AcfComposer;
 
-class EmboldTailwindBlocks {
+class EmboldTailwindBlocks
+{
     protected $app;
 
-    public function __construct() {
-        // Create an instance of Roots\Acorn\Application
-        $this->app = new Application(plugin_dir_path(__FILE__));
+    protected $composer;
 
-        // Register a config repository with the application
-        $this->app->singleton('config', function () {
-            return new ConfigRepository();
-        });
+    public function __construct()
+    {
+        // Initialize the application
+        $this->app = $this->createApplication();
+
+        $this->composer = new AcfComposer($this->app);
+
+        // Auto-load blocks
+        add_action('acf/init', [$this, 'init']);
     }
 
-    public function init() {
-        // Initialize the options page.
+    protected function createApplication()
+    {
+        $app = new \Roots\Acorn\Application();
+        $app->singleton('config', function () {
+            return new ConfigRepository();
+        });
+
+        return $app;
+    }
+
+    public function init()
+    {
         InitOptions::initialize();
 
-        // Initialize the blocks.
-        InitBlocks::initialize($this->app);
-        
-        // Initialize the fields.
-        InitFields::initialize($this->app);
+        InitBlocks::initialize($this->composer);
+
+        InitFields::initialize($this->composer);
     }
 
     public function insertBlockCategory()
@@ -35,8 +47,8 @@ class EmboldTailwindBlocks {
             return array_merge(
                 [
                     [
-                        'slug'  => 'embold',
-                        'title' => __( 'emBold', 'embold' ),
+                        'slug' => 'embold',
+                        'title' => __('emBold', 'embold'),
                     ],
                 ],
                 $categories
@@ -44,31 +56,32 @@ class EmboldTailwindBlocks {
         }, 10, 2);
     }
 
-    public function formatSubfieldsToArrays() {
+    public function formatSubfieldsToArrays()
+    {
         // Add the filter with a higher priority
-        add_filter('acf/format_value', [$this, 'convert_subfields_to_array'], 30, 3);
+        add_filter('acf/format_value', [$this, 'convertSubfieldsToArrays'], 30, 3);
     }
 
-    public function convert_subfields_to_array($value, $post_id, $field)
+    public function convertSubfieldsToArrays($value, $post_id, $field)
     {
         // Apply the conversion only to repeater fields
         if ($field['type'] === 'repeater') {
-            $value = $this->convert_subfields_recursive($value);
+            $value = $this->convertSubfieldsRecursive($value);
         }
 
         return $value;
     }
 
-    public function convert_subfields_recursive($data)
+    public function convertSubfieldsRecursive($data)
     {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $data[$key] = $this->convert_subfields_recursive($value);
+                $data[$key] = $this->convertSubfieldsRecursive($value);
             }
         } elseif (is_object($data)) {
             $data = (array) $data;
             foreach ($data as $key => $value) {
-                $data[$key] = $this->convert_subfields_recursive($value);
+                $data[$key] = $this->convertSubfieldsRecursive($value);
             }
         }
 

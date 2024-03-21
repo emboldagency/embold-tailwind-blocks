@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Slider extends CustomBlock
 {
@@ -121,19 +121,19 @@ class Slider extends CustomBlock
                 'title' => '<p>A First</p><p>Slider Goes Here</p>',
                 'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>',
                 'link' => '/',
-                'image' => 'https://placekitten.com/804/462'
+                'image' => 'https://placebear.com/804/462',
             ],
             [
                 'title' => '<p>Number Two</p><p>Comes After One</p>',
                 'body' => '<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>',
                 'link' => '/',
-                'image' => 'https://placekitten.com/824/482'
+                'image' => 'https://placebear.com/824/482',
             ],
             [
                 'title' => '<p>A Third</p><p>Slider Here</p>',
                 'body' => '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
                 'link' => '/',
-                'image' => 'https://placekitten.com/814/472'
+                'image' => 'https://placebear.com/814/472',
             ],
         ],
     ];
@@ -147,7 +147,7 @@ class Slider extends CustomBlock
     {
         return [
             'slides' => $this->slides(),
-            'padding' => Padding::value()
+            'padding' => Padding::value(),
         ];
     }
 
@@ -158,16 +158,16 @@ class Slider extends CustomBlock
      */
     public function fields()
     {
-        $slider = new FieldsBuilder('slider');
+        $slider = Builder::make('slider');
 
         $slider
             ->addRepeater('slides')
-                ->addWysiwyg('title')
-                ->addWysiwyg('body')
-                ->addText('link')
-                ->addImage('image', [
-                    'return_format' => 'url',
-                ])
+            ->addWysiwyg('title')
+            ->addWysiwyg('body')
+            ->addText('link')
+            ->addImage('image', [
+                'return_format' => 'url',
+            ])
             ->endRepeater();
 
         return $slider->build();
@@ -188,7 +188,7 @@ class Slider extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         // enqueue remote jquery from cdn
         wp_enqueue_script('splide', 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js');
@@ -196,6 +196,6 @@ class Slider extends CustomBlock
         // enqueue splide css
         wp_enqueue_style('splide', 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css');
 
-        parent::enqueue();
+        parent::assets($block);
     }
 }

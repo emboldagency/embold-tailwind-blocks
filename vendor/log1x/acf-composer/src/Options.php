@@ -43,6 +43,13 @@ abstract class Options extends Composer
     public $position = PHP_INT_MAX;
 
     /**
+     * The option page visibility in the admin menu.
+     *
+     * @var bool
+     */
+    public $menu = true;
+
+    /**
      * The slug of another admin page to be used as a parent.
      *
      * @var string
@@ -59,9 +66,9 @@ abstract class Options extends Composer
     /**
      * Redirect to the first child page if one exists.
      *
-     * @var boolean
+     * @var bool
      */
-    public $redirect = true;
+    public $redirect = false;
 
     /**
      * The post ID to save and load values from.
@@ -76,6 +83,13 @@ abstract class Options extends Composer
      * @var bool
      */
     public $autoload = true;
+
+    /**
+     * The additional option page settings.
+     *
+     * @var array
+     */
+    public $settings = [];
 
     /**
      * Localized text displayed on the submit button.
@@ -100,7 +114,7 @@ abstract class Options extends Composer
     /**
      * Compose and register the defined ACF field groups.
      *
-     * @return void
+     * @return mixed
      */
     public function compose()
     {
@@ -125,20 +139,26 @@ abstract class Options extends Composer
         }
 
         $this->register(function () {
-            acf_add_options_page([
-                'menu_title' => $this->name,
-                'menu_slug' => $this->slug,
-                'page_title' => $this->title,
-                'capability' => $this->capability,
-                'position' => $this->position,
-                'parent_slug' => $this->parent,
-                'icon_url' => $this->icon,
-                'redirect' => $this->redirect,
-                'post_id' => $this->post,
-                'autoload' => $this->autoload,
-                'update_button' => $this->updateButton(),
-                'updated_message' => $this->updatedMessage()
-            ]);
+            if (! $this->menu) {
+                return;
+            }
+
+            acf_add_options_page(
+                array_merge([
+                    'menu_title' => $this->name,
+                    'menu_slug' => $this->slug,
+                    'page_title' => $this->title,
+                    'capability' => $this->capability,
+                    'position' => $this->position,
+                    'parent_slug' => $this->parent,
+                    'icon_url' => $this->icon,
+                    'redirect' => $this->redirect,
+                    'post_id' => $this->post,
+                    'autoload' => $this->autoload,
+                    'update_button' => $this->updateButton(),
+                    'updated_message' => $this->updatedMessage(),
+                ], $this->settings)
+            );
         });
 
         return $this;

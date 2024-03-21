@@ -3,7 +3,7 @@ Contributors: itsjsutxan
 Tags: tailwind, blocks
 Requires at least: 6.0
 Tested up to: 6.2.2
-Stable tag: 1.0.1
+Stable tag: 2.0.0
 Requires PHP: 8.0
 
 A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
@@ -21,8 +21,8 @@ Please view the full README.md on GitHub.
 
 == Changelog ==
 
-= 1.0.1 =
-* Minor version number bump, just as a test.
+= 2.0.0 =
+* Rewrote and updated a good chunk of the plugin to be compatible with Acorn v4 and Livewire.
 
 = 1.0.0 =
 * Disable plugin updates if a Acorns is lower than v4 or log1x/acf-composer is lower than v3

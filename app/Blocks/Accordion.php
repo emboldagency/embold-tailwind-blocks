@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Accordion extends CustomBlock
 {
@@ -148,7 +148,7 @@ class Accordion extends CustomBlock
      */
     public function fields()
     {
-        $accordion = new FieldsBuilder('accordion_title');
+        $accordion = Builder::make('accordion_title');
 
         $accordion->addText('accordion_title');
 
@@ -170,7 +170,7 @@ class Accordion extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         global $is_first_accordion_instance;
         $is_first_accordion_instance = true;
@@ -181,8 +181,8 @@ class Accordion extends CustomBlock
     /**
      * Add custom style to the first accordion instance.
      *
-     * @param  string  $block_content The block content.
-     * @param  array  $block         The block data.
+     * @param  string  $block_content  The block content.
+     * @param  array  $block  The block data.
      * @return string
      */
     public function add_custom_style_to_first_accordion_instance($block_content, $block)
@@ -191,7 +191,7 @@ class Accordion extends CustomBlock
 
         if ($is_first_accordion_instance && $block['blockName'] === 'app/accordion') {
             $style = '<style>body { color: red; }</style>';
-            $block_content = $style . $block_content;
+            $block_content = $style.$block_content;
             $is_first_accordion_instance = false;
         }
 

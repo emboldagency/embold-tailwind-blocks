@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Check if .hero-splide element exists in the DOM
-  const heroSplideElement = document.querySelector(".hero-splide");
+  const heroSplideElement = document.querySelector(".splide");
 
   if (heroSplideElement && typeof Splide !== "undefined") {
     setTimeout(function () {

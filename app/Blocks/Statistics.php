@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Statistics extends CustomBlock
 {
@@ -176,7 +176,7 @@ class Statistics extends CustomBlock
      */
     public function fields()
     {
-        $statistics = new FieldsBuilder('statistics');
+        $statistics = Builder::make('statistics');
 
         $statistics
             ->addImage('featured_background', [
@@ -205,9 +205,9 @@ class Statistics extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         // Load the default JS file or our theme JS file automagically
-        parent::enqueue();
+        parent::assets($block);
     }
 }

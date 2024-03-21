@@ -2,22 +2,25 @@
 
 ## What does it do?
 
-This plugin utilizes the acf-composer and acf-builder packages and allows us to include our own default 
+This plugin utilizes the acf-composer and acf-builder packages and allows us to include our own default
 Block and Field classes in the plugin files to jumpstart theme development.
 
 If for some reason you need to tweak or modify what comes with the plugin you can copy the file into your theme and tweak it.
-Need the Statistics block to do something slightly different? Copy its app/Blocks/Statistics.php from the plugin to your theme and 
+Need the Statistics block to do something slightly different? Copy its app/Blocks/Statistics.php from the plugin to your theme and
 the theme files take priority. You can do this with the Padding field, or any views as well.
 
 It includes the following by default:
 
 ### Blocks
+
 - Statistics: A list of statistics with subfields for number and description, in 4 styles of featurd, grid, list, and full width.
 
 ### Fields
+
 - Padding: A padding field option added to every block where the user can check whether they want padding to apply to all sides of just individual sides of a block.
 
 ### Options
+
 The plugin creates a parent "Theme Options" category in the sidebar, this way when you're creating any options pages you
 can set their parent slugs to `theme-options`.
 
@@ -27,6 +30,7 @@ After the plugin is installed and activated, you'll want to configure both your 
 watch the plugins files so that purge and browsersync work with the plugin.
 
 bud.config.js
+
 ```js
 .watch([
             'resources/views',
@@ -36,6 +40,7 @@ bud.config.js
 ```
 
 tailwind.config.cjs
+
 ```js
 content: [
         './index.php',
@@ -52,12 +57,12 @@ Now classes only used in the plugin files will not be purged, and the page can b
 Often you'll find you need to tweak how a block is rendered per theme to match each design.
 
 Block views are stored inside of `resources/views/blocks/{block-name}.blade.php` - to customize the views for your theme you can
-copy this file directly over to your themes `resources/views/blocks` directory and start modifying it. The theme version will 
+copy this file directly over to your themes `resources/views/blocks` directory and start modifying it. The theme version will
 always override the version found in the plugin.
 
 ## Block JavaScript
 
-Our blocks use our own custom class [App\CustomBlock](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php) that extends the default [Log1x\AcfComposer\Block](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/vendor/log1x/acf-composer/src/Block.php) class that Sage typically uses. 
+Our blocks use our own custom class [App\CustomBlock](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php) that extends the default [Log1x\AcfComposer\Block](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/vendor/log1x/acf-composer/src/Block.php) class that Sage typically uses.
 This allows us to do a few different things that we normally wouldn't be able to do.
 
 First, ensure that the blocks class declaration file (example: /resources/app/Blocks/ExampleBlock.php) uses our custom class and not the default.
@@ -66,41 +71,42 @@ First, ensure that the blocks class declaration file (example: /resources/app/Bl
 
 ```php
 use App\CustomBlock;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Accordion extends CustomBlock
 ```
 
 #### :x: Incorrect
+
 ```php
 use Log1x\AcfComposer\Block;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Accordion extends Block
 ```
 
 ### Automatic JavaScript File Loading
 
-Now that we're using our `CustomBlock` class, we have our extension of the `enqueue()` method which will automatically load JavaScript files based on their "slug" format naming. 
+Now that we're using our `CustomBlock` class, we have our extension of the `assets($block)` method which will automatically load JavaScript files based on their "slug" format naming.
 For example a HeroSlider.php block would automatically look for and try to load a `/resources/scripts/blocks/hero-slider.js` - but only if the file exists.
 
 One of the benefits of this is that you do not need to manually import each .js file in your app.js. Loading your JavaScript files in app.js includes the code for your block on every page,
 regardless of your block being called on the page or not. By using our automatic file loading method, the JavaScript file is only loaded on pages that call your block,
 and only once per page.
 
-If you have a JavaScript file for your block you can add it to the Sage `bud.config.js` array of entrypoints. The example below shows how to add both single word files, 
+If you have a JavaScript file for your block you can add it to the Sage `bud.config.js` array of entrypoints. The example below shows how to add both single word files,
 as well as files that may contain a hyphen. This will run your files through the same process as the app.js but output into their own compiled versions.
 
 ```js
 app.entry({
-        app: ['@scripts/app', '@styles/app'],
-        editor: ['@scripts/editor', '@styles/editor'],
-        slider: ['@scripts/blocks/slider'],
-        'hero-slider': ['@scripts/blocks/hero-slider'],
-    })
+  app: ["@scripts/app", "@styles/app"],
+  editor: ["@scripts/editor", "@styles/editor"],
+  slider: ["@scripts/blocks/slider"],
+  "hero-slider": ["@scripts/blocks/hero-slider"],
+});
 ```
 
-Our [custom enqueue() method](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php#L12) will actually look for your files key in the manifest.json and 
+Our [custom assets($block) method](https://github.com/emboldagency/embold-tailwind-blocks/blob/master/includes/CustomBlock.php#L12) will actually look for your files key in the manifest.json and
 load it based on the value pair so that it will always load the correct version while in development or production.
 
 ### Already Included JavaScript Files
@@ -124,7 +130,7 @@ There are many things you can customize in these files, most of which are self e
 - `$icon` this is the shortcode for any [dashicon](https://developer.wordpress.org/resource/dashicons/)
 - `$category` should always be "embold" so that all of our custom blocks are grouped together in the editor.
 - The `$post_types` and `$parent` arrays let you specify what post types and what types of other blocks your block can be embedded in.
-- The `public $styles` array is used to add different options for styles to use when building out the template. By default it has a light and dark mode. 
+- The `public $styles` array is used to add different options for styles to use when building out the template. By default it has a light and dark mode.
 - The `public $example` array is used to provide example data that the client can see when they first add the block to a template.
 - The `public function fields()` method is for building out ACF fields used just in this block. Reference this [cheat sheet](https://github.com/Log1x/acf-builder-cheatsheet) for help with how to do the different fields.
 - The `public function items()` method is example of how you can manipulate properties before sending them to the frontend. You'll notice in the `with()` method we're referencing items as `$this➝items()` which is a direct call to this method. The example one each block comes with is showing you that you can use a ternary to send either the ACF value if it exists, or the example value if it is blank. You can use these methods to transform your data before passing it to the frontend. If you wanted to manipulate a `date` field for example before rendering it on the frontend you could make a `public function date()` method.
@@ -145,15 +151,16 @@ Make sure your block for the plugin inherits our custom block class and not the 
 
 ```php
 use App\CustomBlock;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Accordion extends CustomBlock
 ```
 
 #### :x: Incorrect
+
 ```php
 use Log1x\AcfComposer\Block;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Accordion extends Block
 ```

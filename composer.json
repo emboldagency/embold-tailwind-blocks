@@ -13,11 +13,11 @@
     ]
   },
   "require": {
-    "log1x/acf-composer": "^2.1",
-    "roots/acorn": "^3.1",
-    "illuminate/support": "^9.47",
-    "illuminate/filesystem": "^9.47",
-    "illuminate/container": "^9.47",
-    "illuminate/config": "^9.52"
+    "log1x/acf-composer": "^3.0",
+    "roots/acorn": "^4.1",
+    "illuminate/support": "^10.43",
+    "illuminate/filesystem": "^10.43",
+    "illuminate/container": "^10.43",
+    "illuminate/config": "^10.43"
   }
 }

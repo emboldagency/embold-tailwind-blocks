@@ -2,31 +2,28 @@
 
 namespace App;
 
-use Roots\Acorn\Application;
-
 class InitBlocks
 {
-    public static function initialize(Application $app)
+    public static function initialize($composer)
     {
+        // Register your blocks here
         $block_classes = [
             // alphabetical please
-            \App\Blocks\Accordion::class,
-            \App\Blocks\Button::class,
-            \App\Blocks\Slider::class,
-            \App\Blocks\Statistics::class,
-            \App\Blocks\TestimonialMultiple::class,
-            \App\Blocks\TestimonialSingle::class,
+            Blocks\Accordion::class,
+            Blocks\Button::class,
+            Blocks\Slider::class,
+            Blocks\Statistics::class,
+            Blocks\TestimonialMultiple::class,
+            Blocks\TestimonialSingle::class,
             // Add more block classes here
         ];
 
-        foreach ($block_classes as $block_class) {
-            /** @var CustomBlock $block */
-            $formatted_block_class = str_replace('App\\Blocks\\', '', $block_class);
+        foreach ($block_classes as $block) {
+            $formatted_block_class = str_replace('App\\Blocks\\', '', $block);
 
-            if (!file_exists(get_theme_file_path("app/Blocks/{$formatted_block_class}.php"))) {
-                $block = new $block_class($app);
+            if (! file_exists(get_theme_file_path("app/Blocks/{$formatted_block_class}.php"))) {
 
-                $block->compose();
+                (new $block($composer))->compose();
             }
         }
     }

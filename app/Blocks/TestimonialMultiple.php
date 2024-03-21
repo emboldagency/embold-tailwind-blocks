@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 use App\CustomBlock;
 use App\Fields\Padding;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class TestimonialMultiple extends CustomBlock
 {
@@ -118,19 +118,19 @@ class TestimonialMultiple extends CustomBlock
             [
                 'quote' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
                 'author' => 'Quote Author',
-                'image' => 'https://via.placeholder.com/350x350'
+                'image' => 'https://via.placeholder.com/350x350',
             ],
             [
                 'quote' => '<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
                 'author' => 'Another Author',
-                'image' => 'https://via.placeholder.com/350x350'
+                'image' => 'https://via.placeholder.com/350x350',
             ],
             [
                 'quote' => '<p>More text goes here to demonstrate the testimonials third slide in the slider.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
                 'author' => 'Yet Another Author',
-                'image' => 'https://via.placeholder.com/350x350'
-            ]
-        ]
+                'image' => 'https://via.placeholder.com/350x350',
+            ],
+        ],
     ];
 
     /**
@@ -154,18 +154,18 @@ class TestimonialMultiple extends CustomBlock
      */
     public function fields()
     {
-        $testimonialMultiple = new FieldsBuilder('testimonial_multiple');
+        $testimonialMultiple = Builder::make('testimonial_multiple');
 
         $testimonialMultiple
             ->addImage('background_image', [
                 'return_format' => 'url',
             ])
             ->addRepeater('testimonials')
-                ->addText('quote')
-                ->addWysiwyg('author')
-                ->addImage('image', [
-                    'return_format' => 'url',
-                ])
+            ->addText('quote')
+            ->addWysiwyg('author')
+            ->addImage('image', [
+                'return_format' => 'url',
+            ])
             ->endRepeater();
 
         return $testimonialMultiple->build();
@@ -176,7 +176,7 @@ class TestimonialMultiple extends CustomBlock
      *
      * @return void
      */
-    public function enqueue()
+    public function assets($block)
     {
         // enqueue remote jquery from cdn
         wp_enqueue_script('splide', 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js');
@@ -184,6 +184,6 @@ class TestimonialMultiple extends CustomBlock
         // enqueue splide css
         wp_enqueue_style('splide', 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css');
 
-        parent::enqueue();
+        parent::assets($block);
     }
 }

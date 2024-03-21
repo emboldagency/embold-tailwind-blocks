@@ -2,8 +2,8 @@
 
 namespace App\Fields;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Padding extends Field
 {
@@ -33,7 +33,7 @@ class Padding extends Field
      */
     public function fields()
     {
-        $padding = new FieldsBuilder('padding_fields');
+        $padding = Builder::make('padding_fields');
 
         $padding
             ->setLocation('block', '==', 'all');
