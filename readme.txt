@@ -3,7 +3,7 @@ Contributors: itsjsutxan
 Tags: tailwind, blocks
 Requires at least: 6.0
 Tested up to: 6.2.2
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 Requires PHP: 8.0
 
 A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
@@ -20,6 +20,9 @@ the theme files take priority. You can do this with the Padding field, or any vi
 Please view the full README.md on GitHub.
 
 == Changelog ==
+
+= 2.0.2 =
+* Remove nested acf/init action so that default options page gets called again
 
 = 2.0.1 =
 * Fix deprecated function
