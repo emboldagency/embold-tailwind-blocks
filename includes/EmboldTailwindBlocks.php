@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Config\Repository as ConfigRepository;
 use Log1x\AcfComposer\AcfComposer;
+use Roots\Acorn\Application;
 
 class EmboldTailwindBlocks
 {
@@ -24,7 +25,7 @@ class EmboldTailwindBlocks
 
     protected function createApplication()
     {
-        $app = new \Roots\Acorn\Application();
+        $app = new Application();
         $app->singleton('config', function () {
             return new ConfigRepository();
         });
@@ -39,6 +40,16 @@ class EmboldTailwindBlocks
         InitBlocks::initialize($this->composer);
 
         InitFields::initialize($this->composer);
+
+        add_filter('acf/register_block_type_args', [$this, 'add_validate_key_to_block_settings'], 10, 1);
+    }
+
+    public function add_validate_key_to_block_settings($settings)
+    {
+        if (!isset($settings['validate'])) {
+            $settings['validate'] = false; // Set to true if you prefer
+        }
+        return $settings;
     }
 
     public function insertBlockCategory()
@@ -79,7 +90,7 @@ class EmboldTailwindBlocks
                 $data[$key] = $this->convertSubfieldsRecursive($value);
             }
         } elseif (is_object($data)) {
-            $data = (array) $data;
+            $data = (array)$data;
             foreach ($data as $key => $value) {
                 $data[$key] = $this->convertSubfieldsRecursive($value);
             }
