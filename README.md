@@ -24,6 +24,15 @@ It includes the following by default:
 The plugin creates a parent "Theme Options" category in the sidebar, this way when you're creating any options pages you
 can set their parent slugs to `theme-options`.
 
+### Modifiers
+
+Modifiers can be created in the app/Modifiers directory of the Sage theme, and are used to add style options to blocks from
+either the core or any blocks added via other extensions. This plugin has a started example file that can be copied in
+app/Modifiers/CoreGroup.php.example
+
+You'll simply set the name to one of the blocks, in our example "core/group" and then you can add as many style options
+as you see fit.
+
 ## Sage 10 setup
 
 After the plugin is installed and activated, you'll want to configure both your tailwind.config.js and bud.config.js to

@@ -4,7 +4,7 @@
  * Plugin Name:        emBold Tailwind Blocks
  * Plugin URI:         https://embold.com
  * Description:        A collection of Tailwind Blocks. Requires Advanced Custom Fields PRO plugin to be enabled. Requires theme built on Acorn v4, and ACF Composer v3.
- * Version:            2.1.0
+ * Version:            2.2.0
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
@@ -150,6 +150,8 @@ function embold_tailwind_blocks_init()
 
     // Add compatibility with Laraish Themes
     $plugin->formatSubfieldsToArrays();
+
+    $plugin->registerModifiers();
 }
 
 add_action('plugins_loaded', 'embold_tailwind_blocks_init');

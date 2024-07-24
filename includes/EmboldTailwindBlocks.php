@@ -44,6 +44,18 @@ class EmboldTailwindBlocks
         add_filter('acf/register_block_type_args', [$this, 'add_validate_key_to_block_settings'], 10, 1);
     }
 
+    public function registerModifiers()
+    {
+        // loop through all the classes in App\Extensions namespace and register them
+        // look in theme path for the extensions
+        foreach (glob(get_template_directory() . '/app/Modifiers/*.php') as $filename) {
+            require_once $filename;
+            $class = 'App\\Modifiers\\' . basename($filename, '.php');
+            $extension = new $class();
+            $extension->register();
+        }
+    }
+
     public function add_validate_key_to_block_settings($settings)
     {
         if (!isset($settings['validate'])) {
