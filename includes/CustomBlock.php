@@ -28,7 +28,7 @@ abstract class CustomBlock extends Block
         $this->icon['foreground'] = $this->defaultIconForeground;
     }
 
-    public function assets($block)
+    public function assets(array $block)
     {
         $plugin_js_file = str_replace('/includes', '', plugin_dir_path(__FILE__)."resources/scripts/blocks/{$this->slug}.js");
 
