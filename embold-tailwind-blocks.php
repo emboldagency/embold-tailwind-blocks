@@ -2,9 +2,9 @@
 /**
  * @wordpress-plugin
  * Plugin Name:        emBold Tailwind Blocks
- * Plugin URI:         https://embold.com
+ * Plugin URI:         https://github.com/emboldagency/embold-tailwind-blocks
  * Description:        A collection of Tailwind Blocks. Requires Advanced Custom Fields PRO plugin to be enabled. Requires theme built on Acorn v4, and ACF Composer v3.
- * Version:            2.3.1
+ * Version:            2.3.2
  * Author:             emBold
  * Author URI:         https://embold.com/
  * Primary Branch:     master
