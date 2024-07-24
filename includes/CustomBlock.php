@@ -67,6 +67,10 @@ abstract class CustomBlock extends Block
 
         $this->post = get_post($post_id);
 
+        $this->template = is_array($this->template)
+        ? $this->handleTemplate($this->template)->toJson()
+        : $this->template;
+
         $this->classes = collect([
             'slug' => Str::start(
                 Str::slug($this->slug),
