@@ -61,6 +61,13 @@ content: [
 
 Now classes only used in the plugin files will not be purged, and the page can be automatically reloaded when files change.
 
+## Commands
+
+To generate a custom block, do
+```bash
+wp acorn embold:block Example
+```
+
 ## Customizing a Block view in your Sage10 theme
 
 Often you'll find you need to tweak how a block is rendered per theme to match each design.

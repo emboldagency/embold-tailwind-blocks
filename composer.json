@@ -19,5 +19,12 @@
     "illuminate/filesystem": "^10.43",
     "illuminate/container": "^10.43",
     "illuminate/config": "^10.43"
+  },
+  "extra": {
+    "acorn": {
+      "providers": [
+        "\\App\\Providers\\EmboldServiceProvider"
+      ]
+    }
   }
 }
