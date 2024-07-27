@@ -11,6 +11,10 @@ class InitOptions
      */
     public static function initialize()
     {
+        if (!config('embold-tailwind-blocks.theme_options_page')) {
+            return;
+        }
+
         acf_add_options_page([
             'page_title' => __('Theme Options'),
             'menu_title' => __('Theme Options'),

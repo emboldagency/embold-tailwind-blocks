@@ -6,17 +6,7 @@ class InitBlocks
 {
     public static function initialize($composer)
     {
-        // Register your blocks here
-        $block_classes = [
-            // alphabetical please
-            Blocks\Accordion::class,
-            Blocks\Button::class,
-            Blocks\Slider::class,
-            Blocks\Statistics::class,
-            Blocks\TestimonialMultiple::class,
-            Blocks\TestimonialSingle::class,
-            // Add more block classes here
-        ];
+        $block_classes = config('embold_tailwind_blocks.block_classes', []);
 
         foreach ($block_classes as $block) {
             $formatted_block_class = str_replace('App\\Blocks\\', '', $block);

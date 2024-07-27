@@ -24,6 +24,11 @@ class EmboldServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Publish config file
+        $this->publishes([
+            __DIR__ . '/../../config/embold-tailwind-blocks.php' => $this->app->configPath('embold-tailwind-blocks.php'),
+        ], 'embold-config');
+
         // Publish block class definitions
         $this->publishes([
             __DIR__ . '/../../app/Blocks' => $this->app->basePath('app/Blocks'),

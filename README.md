@@ -83,6 +83,7 @@ wp acorn vendor:publish --tag=embold-blocks
 ```
 
 Available tags:
+- `embold-config` will copy the plugin config file to `config/embold-tailwind-blocks.php` where you can toggle plugin features, blocks, fields, etc.
 - `embold-blocks` will copy the block definition files, views, scripts, and styles.
 - `embold-fields` will copy the fields.
 - `embold-modifiers` will copy over the core modifiers.
