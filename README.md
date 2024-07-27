@@ -63,10 +63,29 @@ Now classes only used in the plugin files will not be purged, and the page can b
 
 ## Commands
 
-To generate a custom block, do
-```bash
+Generate a custom block with our template.
+```shell
 wp acorn embold:block Example
 ```
+
+### Publishable Files
+
+You can copy some or all files from the plugin into the appropriate places in your app for easy override. If the files already exist in the destination, they will be skipped.
+
+Publish all tags from our service provider.
+```shell
+wp acorn vendor:publish --provider='App\Providers\EmboldServiceProvider'
+```
+
+Publish a specific tag/tags.
+```shell
+wp acorn vendor:publish --tag=embold-blocks
+```
+
+Available tags:
+- `embold-blocks` will copy the block definition files, views, scripts, and styles.
+- `embold-fields` will copy the fields.
+- `embold-modifiers` will copy over the core modifiers.
 
 ## Customizing a Block view in your Sage10 theme
 
@@ -134,7 +153,7 @@ As always, the theme version of JavaScript files will always override the versio
 
 ## Customizing a Block class in your Sage10 theme
 
-You may need to modify what ACF fields are in a block, or how the data is being manipulate on its way to the frontend.
+You may need to modify what ACF fields are in a block, or how the data is being manipulated on its way to the frontend.
 
 > **Important:** If you copy over your blocks class you must also copy over the view
 

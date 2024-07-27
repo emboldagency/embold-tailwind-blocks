@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modifiers;
+namespace App\Modifiers;
 
 use App\CoreModifier;
 
