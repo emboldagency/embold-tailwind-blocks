@@ -14,12 +14,12 @@ return [
 
   // alphabetical please
   'block_classes' => [
-    'Blocks\Accordion::class',
-    'Blocks\Button::class',
-    'Blocks\Slider::class',
-    'Blocks\Statistics::class',
-    'Blocks\TestimonialMultiple::class',
-    'Blocks\TestimonialSingle::class',
+    'Accordion',
+    'Button',
+    'Slider',
+    'Statistics',
+    'TestimonialMultiple',
+    'TestimonialSingle',
   ],
 
   /*
@@ -34,8 +34,8 @@ return [
 
   // alphabetical please
   'field_classes' => [
-    'Fields\Padding::class',
-    // 'Fields\BackgroundColor::class',
+    'Padding',
+    // 'BackgroundColor',
   ],
 
   /*
@@ -50,7 +50,7 @@ return [
 
   // alphabetical please
   'modifier_classes' => [
-    // 'Modifiers\CoreGroup::class',
+    // 'CoreGroup',
   ],
 
   /*
