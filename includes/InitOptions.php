@@ -11,7 +11,7 @@ class InitOptions
      */
     public static function initialize()
     {
-        if (!config('embold-tailwind-blocks.theme_options_page')) {
+        if (!config('emblocks.theme_options_page')) {
             return;
         }
 

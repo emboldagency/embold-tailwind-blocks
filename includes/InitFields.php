@@ -8,13 +8,16 @@ class InitFields
 {
     public static function initialize(AcfComposer $composer)
     {
-        $field_classes = config('embold_tailwind_blocks.field_classes', []);
+        $field_namespace = 'Fields';
+        $field_classes = config('emblocks.field_classes', []);
 
         foreach ($field_classes as $field_class) {
-            $formatted_field_class = str_replace('App\\Fields\\', '', $field_class);
+            $field_path = "app/{$field_namespace}/{$field_class}.php";
 
-            if (! file_exists(get_theme_file_path("app/Fields/{$formatted_field_class}.php"))) {
-                (new $field_class($composer))->compose();
+            if (! file_exists(get_theme_file_path($field_path))) {
+                $class = '\App\\' . $field_namespace . '\\' . $field_class;
+
+                (new $class($composer))->compose();
             }
         }
     }

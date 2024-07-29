@@ -24,45 +24,46 @@ class EmboldServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Publish config file
-        $this->publishes([
-            __DIR__ . '/../../config/embold-tailwind-blocks.php' => $this->app->configPath('embold-tailwind-blocks.php'),
-        ], 'embold-config');
-
-        // Publish block class definitions
-        $this->publishes([
-            __DIR__ . '/../../app/Blocks' => $this->app->basePath('app/Blocks'),
-        ], 'embold-blocks');
-
-        // Publish block views
-        $this->publishes([
-            __DIR__ . '/../../resources/views/blocks' => resource_path('views/blocks'),
-        ], 'embold-blocks');
-
-        // Publish block styles
-        $this->publishes([
-            __DIR__ . '/../../resources/styles/blocks' => resource_path('styles/blocks'),
-        ], 'embold-blocks');
-
-        // Publish block scripts
-        $this->publishes([
-            __DIR__ . '/../../resources/scripts/blocks' => resource_path('scripts/blocks'),
-        ], 'embold-blocks');
-
-        // Publish field groups
-        $this->publishes([
-            __DIR__ . '/../../app/Fields' => base_path('app/Fields'),
-        ], 'embold-fields');
-
-        // Publish core modifiers
-        $this->publishes([
-            __DIR__ . '/../../app/Modifiers' => base_path('app/Modifiers'),
-        ], 'embold-modifiers');
+        $this->publishAssets([
+            'embold-config' => [
+                ['config/emblocks.php', config_path('emblocks.php')],
+            ],
+            'embold-blocks' => [
+                ['app/Blocks', base_path('app/Blocks')],
+                ['resources/views/blocks', resource_path('views/blocks')],
+                ['resources/styles/blocks', resource_path('styles/blocks')],
+                ['resources/scripts/blocks', resource_path('scripts/blocks')],
+            ],
+            'embold-fields' => [
+                ['app/Fields', base_path('app/Fields')],
+            ],
+            'embold-modifiers' => [
+                ['app/Modifiers', base_path('app/Modifiers')],
+            ],
+            'embold-stubs' => [
+                ['includes/Console/stubs', resource_path('stubs/emblocks')],
+            ],
+        ]);
 
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CustomBlockMakeCommand::class,
             ]);
+        }
+    }
+
+    /**
+     * Helper function to publish assets.
+     *
+     * @param array $assets
+     * @return void
+     */
+    protected function publishAssets(array $assets)
+    {
+        foreach ($assets as $tag => $paths) {
+            foreach ($paths as $path) {
+                $this->publishes([__DIR__ . '/../../' . $path[0] => $path[1]], $tag);
+            }
         }
     }
 }

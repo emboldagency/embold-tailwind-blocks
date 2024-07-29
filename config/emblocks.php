@@ -7,7 +7,7 @@ return [
   | Blocks
   |--------------------------------------------------------------------------
   |
-  | Here you can decide which blocks you would like to register. Each item in
+  | Here you can decide which plugin blocks you would like to register. Each item in
   | the array is a block class that should be enabled.
   |
   */
@@ -27,7 +27,7 @@ return [
   | Fields
   |--------------------------------------------------------------------------
   |
-  | Here you can decide which fields you would like to register. Each item in
+  | Here you can decide which plugin fields you would like to register. Each item in
   | the array is a field class that should be enabled.
   |
   */
@@ -43,7 +43,7 @@ return [
   | Modifiers
   |--------------------------------------------------------------------------
   |
-  | Here you can decide which modifiers you would like to register. Each item in
+  | Here you can decide which plugin modifiers you would like to register. Each item in
   | the array is a modifier class that should be enabled.
   |
   */

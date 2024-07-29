@@ -98,26 +98,33 @@ class DummyClass extends CustomBlock
      */
     public $supports = [
         'align' => true,
-        'align_text' => true,
-        'align_content' => false,
-        'alignWide' => false,
+        'alignContent' => false,
+        'alignText' => false,
         'anchor' => false,
-        'full_height' => false,
+        'fullHeight' => false,
         'anchor' => false,
         'mode' => true,
         'multiple' => true,
         'jsx' => true,
-        'color' => [
-            'text' => true,
-            'link' => true,
-            'headers' => true,
-            'background' => true,
-            'gradient' => true,
-        ],
         'background' => [
-            'background_image' => true,
-            'background_size' => true,
-        ]
+            'backgroundImage' => false,
+            'backgroundSize' => false,
+        ],
+        'color' => [
+            'background' => true,
+            'enableContrastChecker' => true,
+            'gradients' => true,
+            'text' => true,
+        ],
+        'spacing' => [
+            'padding' => true,
+            'margin' => true,
+        ],
+        'typography' => [
+            'letterSpacing' => true,
+            'lineHeight' => true,
+            'fontSize' => true,
+        ],
     ];
 
     /**

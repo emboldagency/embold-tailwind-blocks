@@ -6,14 +6,16 @@ class InitBlocks
 {
     public static function initialize($composer)
     {
-        $block_classes = config('embold_tailwind_blocks.block_classes', []);
+        $block_namespace = 'Blocks';
+        $block_classes = config('emblocks.block_classes', []);
 
-        foreach ($block_classes as $block) {
-            $formatted_block_class = str_replace('App\\Blocks\\', '', $block);
+        foreach ($block_classes as $block_class) {
+            $block_path = "app/{$block_namespace}/{$block_class}.php";
 
-            if (! file_exists(get_theme_file_path("app/Blocks/{$formatted_block_class}.php"))) {
+            if (! file_exists(get_theme_file_path($block_path))) {
+                $class = '\App\\' . $block_namespace . '\\' . $block_class;
 
-                (new $block($composer))->compose();
+                (new $class($composer))->compose();
             }
         }
     }

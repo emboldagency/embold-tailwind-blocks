@@ -59,16 +59,10 @@ class CustomBlockMakeCommand extends MakeCommand
     protected function resolveStub($name)
     {
         $path = '/' . $name . '.stub';
-        $stubsPath = $this->app->basePath('stubs/acf-composer') . $path;
+        $stubsPath = resource_path('stubs/emblocks') . $path;
 
         if ($this->files->exists($stubsPath)) {
             return $stubsPath;
-        }
-
-        $customPath = $this->app->basePath('wp-content/plugins/embold-tailwind-blocks/resources') . $path;
-
-        if ($this->files->exists($customPath)) {
-            return $customPath;
         }
 
         return __DIR__ . '/stubs' . $path;
