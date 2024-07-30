@@ -6,16 +6,19 @@ use Log1x\AcfComposer\AcfComposer;
 
 class InitFields
 {
+    private static $namespace = 'Fields';
+
     public static function initialize(AcfComposer $composer)
     {
-        $field_namespace = 'Fields';
-        $field_classes = config('emblocks.field_classes', []);
+        $namespace = self::$namespace;
 
-        foreach ($field_classes as $field_class) {
-            $field_path = "app/{$field_namespace}/{$field_class}.php";
+        $classes = config('emblocks.field_classes', []);
 
-            if (! file_exists(get_theme_file_path($field_path))) {
-                $class = '\App\\' . $field_namespace . '\\' . $field_class;
+        foreach ($classes as $classname) {
+            $path = "app/{$namespace}/{$classname}.php";
+
+            if (! file_exists(get_theme_file_path($path))) {
+                $class = '\App\\' . $namespace . '\\' . $classname;
 
                 (new $class($composer))->compose();
             }

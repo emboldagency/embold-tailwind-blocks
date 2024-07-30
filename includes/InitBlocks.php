@@ -4,16 +4,19 @@ namespace App;
 
 class InitBlocks
 {
+    private static $namespace = 'Blocks';
+
     public static function initialize($composer)
     {
-        $block_namespace = 'Blocks';
-        $block_classes = config('emblocks.block_classes', []);
+        $namespace = self::$namespace;
 
-        foreach ($block_classes as $block_class) {
-            $block_path = "app/{$block_namespace}/{$block_class}.php";
+        $classes = config('emblocks.block_classes', []);
 
-            if (! file_exists(get_theme_file_path($block_path))) {
-                $class = '\App\\' . $block_namespace . '\\' . $block_class;
+        foreach ($classes as $classname) {
+            $path = "app/{$namespace}/{$classname}.php";
+
+            if (! file_exists(get_theme_file_path($path))) {
+                $class = '\App\\' . $namespace . '\\' . $classname;
 
                 (new $class($composer))->compose();
             }
