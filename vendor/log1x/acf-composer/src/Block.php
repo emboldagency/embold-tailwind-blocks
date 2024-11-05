@@ -9,6 +9,8 @@ use Log1x\AcfComposer\Concerns\FormatsCss;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
 
+use function Roots\asset;
+
 abstract class Block extends Composer implements BlockContract
 {
     use FormatsCss, InteractsWithBlade;
@@ -215,6 +217,13 @@ abstract class Block extends Composer implements BlockContract
     public $style;
 
     /**
+     * The block dimensions.
+     *
+     * @var string
+     */
+    public $inlineStyle;
+
+    /**
      * Context values inherited by the block.
      *
      * @var string[]
@@ -238,16 +247,16 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The block template.
      *
-     * @var array
+     * @var array|string
      */
     public $template = [];
 
     /**
-     * The block dimensions.
+     * Determine whether to save the block's data as post meta.
      *
-     * @var string
+     * @var bool
      */
-    public $inlineStyle;
+    public $usePostMeta = false;
 
     /**
      * The block attributes.
@@ -273,6 +282,22 @@ abstract class Block extends Composer implements BlockContract
 
             $this->{$key} = $value;
         }
+    }
+
+    /**
+     * Retrieve the block name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Retrieve the block description.
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     /**
@@ -401,20 +426,50 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block icon.
+     */
+    public function getIcon(): string|array
+    {
+        if (is_array($this->icon)) {
+            return $this->icon;
+        }
+
+        if (Str::startsWith($this->icon, 'asset:')) {
+            $asset = Str::of($this->icon)
+                ->after('asset:')
+                ->before('.svg')
+                ->replace('.', '/')
+                ->finish('.svg');
+
+            return asset($asset)->contents();
+        }
+
+        return $this->icon;
+    }
+
+    /**
      * Handle the block template.
      */
     public function handleTemplate(array $template = []): Collection
     {
-        return collect($template)->map(function ($value, $key) {
-            if (is_array($value) && Arr::has($value, 'innerBlocks')) {
-                $blocks = collect($value['innerBlocks'])
-                    ->map(fn ($block) => $this->handleTemplate($block)->all())
-                    ->collapse();
+        return collect($template)->map(function ($block, $key) {
+            $name = is_numeric($key)
+                ? array_key_first((array) $block)
+                : $key;
 
-                return [$key, Arr::except($value, 'innerBlocks') ?? [], $blocks->all()];
+            $value = is_numeric($key)
+                ? ($block[$name] ?? [])
+                : $block;
+
+            if (is_array($value) && isset($value['innerBlocks'])) {
+                $innerBlocks = $this->handleTemplate($value['innerBlocks'])->all();
+
+                unset($value['innerBlocks']);
+
+                return [$name, $value, $innerBlocks];
             }
 
-            return [$key, $value];
+            return [$name, $value];
         })->values();
     }
 
@@ -425,11 +480,11 @@ abstract class Block extends Composer implements BlockContract
     {
         $this->mergeAttributes();
 
-        if (empty($this->name)) {
+        if (blank($this->getName())) {
             return null;
         }
 
-        $this->slug = $this->slug ?: Str::slug(Str::kebab($this->name));
+        $this->slug = $this->slug ?: Str::slug(Str::kebab($this->getName()));
         $this->view = $this->view ?: Str::start($this->slug, 'blocks.');
         $this->namespace = $this->namespace ?? Str::start($this->slug, $this->prefix);
 
@@ -467,10 +522,10 @@ abstract class Block extends Composer implements BlockContract
 
         $settings = Collection::make([
             'name' => $this->slug,
-            'title' => $this->name,
-            'description' => $this->description,
+            'title' => $this->getName(),
+            'description' => $this->getDescription(),
             'category' => $this->category,
-            'icon' => $this->icon,
+            'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
             'parent' => $this->parent ?: null,
             'ancestor' => $this->ancestor ?: null,
@@ -484,6 +539,9 @@ abstract class Block extends Composer implements BlockContract
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => 2,
+            'api_version' => 2,
+            'validate' => true,
+            'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
                 $block,
                 $content = '',
@@ -530,9 +588,11 @@ abstract class Block extends Composer implements BlockContract
             'enqueue_assets',
             'mode',
             'render_callback',
+            'use_post_meta',
         ])->put('acf', [
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
+            'usePostMeta' => $this->usePostMeta,
         ])->put('name', $this->namespace);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);

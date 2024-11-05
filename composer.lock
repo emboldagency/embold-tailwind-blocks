@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "831b6e4123faf31969d68936cbad55ee",
+    "content-hash": "951c378612416fb5a4aa33b87efdf893",
     "packages": [
         {
             "name": "brick/math",
@@ -2535,19 +2535,20 @@
         },
         {
             "name": "log1x/acf-composer",
-            "version": "v3.0.23",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Log1x/acf-composer.git",
-                "reference": "35afac709de3d9838f6a02f62db66e7a95073693"
+                "reference": "5b25b6b0066a712bdfb3a176e9e2f805e1b93b07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Log1x/acf-composer/zipball/35afac709de3d9838f6a02f62db66e7a95073693",
-                "reference": "35afac709de3d9838f6a02f62db66e7a95073693",
+                "url": "https://api.github.com/repos/Log1x/acf-composer/zipball/5b25b6b0066a712bdfb3a176e9e2f805e1b93b07",
+                "reference": "5b25b6b0066a712bdfb3a176e9e2f805e1b93b07",
                 "shasum": ""
             },
             "require": {
+                "laravel/prompts": "*",
                 "php": "^8.0",
                 "stoutlogic/acf-builder": "^1.11"
             },
@@ -2581,7 +2582,7 @@
             "description": "Create fields, blocks, option pages, and widgets using ACF Builder and Sage 10",
             "support": {
                 "issues": "https://github.com/Log1x/acf-composer/issues",
-                "source": "https://github.com/Log1x/acf-composer/tree/v3.0.23"
+                "source": "https://github.com/Log1x/acf-composer/tree/v3.2.0"
             },
             "funding": [
                 {
@@ -2589,7 +2590,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-14T13:48:21+00:00"
+            "time": "2024-10-24T12:12:21+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -5891,10 +5892,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
@@ -35,7 +36,12 @@ class AcfComposer
     /**
      * The deferred composers.
      */
-    protected array $deferredComposers = [];
+    protected array $deferredOptions = [];
+
+    /**
+     * The pending composers.
+     */
+    protected array $pendingComposers = [];
 
     /**
      * The legacy widgets.
@@ -93,7 +99,11 @@ class AcfComposer
         $this->handleBlocks();
         $this->handleWidgets();
 
-        add_filter('acf/init', fn () => $this->handleComposers());
+        add_filter('acf/init', fn () => $this->handleComposers(), config('acf.hookPriority', 100));
+
+        add_filter('acf/input/admin_footer', function () {
+            echo view('acf-composer::alpine-support')->render();
+        });
 
         $this->booted = true;
     }
@@ -105,10 +115,18 @@ class AcfComposer
     {
         foreach ($this->composers as $namespace => $composers) {
             foreach ($composers as $i => $composer) {
+                if (! is_subclass_of($composer, Options::class)) {
+                    $this->pendingComposers[$namespace][] = $composer;
+
+                    unset($this->composers[$namespace][$i]);
+
+                    continue;
+                }
+
                 $composer = $composer::make($this);
 
-                if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
-                    $this->deferredComposers[$namespace][] = $composer;
+                if (! is_null($composer->parent)) {
+                    $this->deferredOptions[$namespace][] = $composer;
 
                     unset($this->composers[$namespace][$i]);
 
@@ -119,13 +137,44 @@ class AcfComposer
             }
         }
 
-        foreach ($this->deferredComposers as $namespace => $composers) {
+        foreach ($this->deferredOptions as $namespace => $composers) {
             foreach ($composers as $index => $composer) {
                 $this->composers[$namespace][] = $composer->handle();
             }
         }
 
-        $this->deferredComposers = [];
+        foreach ($this->pendingComposers as $namespace => $composers) {
+            foreach ($composers as $composer) {
+                $this->composers[$namespace][] = $composer::make($this)->handle();
+            }
+        }
+
+        $this->deferredOptions = [];
+        $this->pendingComposers = [];
+
+        foreach ($this->composers as $namespace => $composers) {
+            $names = [];
+
+            foreach ($composers as $composer) {
+                $group = $composer->getFields();
+
+                $key = $group['key'] ?? $group[0]['key'] ?? null;
+
+                if (! $key) {
+                    continue;
+                }
+
+                if (isset($names[$key])) {
+                    $class = $composer::class;
+
+                    throw new DuplicateKeyException("Duplicate ACF field group key [{$key}] found in [{$class}] and [{$names[$key]}].");
+                }
+
+                $names[$key] = $composer::class;
+            }
+
+            $this->composers[$namespace] = array_values($composers);
+        }
     }
 
     /**
@@ -149,7 +198,7 @@ class AcfComposer
      */
     protected function handleBlocks(): void
     {
-        add_filter('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
+        add_action('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
             if (! class_exists($composer = $block['render_template'] ?? '')) {
                 return;
             }
@@ -158,10 +207,12 @@ class AcfComposer
                 return;
             }
 
+            add_filter('acf/blocks/template_not_found_message', fn () => '');
+
             method_exists($composer, 'assets') && $composer->assets($block);
 
             echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
-        }, 10, 6);
+        }, 9, 6);
     }
 
     /**
@@ -188,7 +239,7 @@ class AcfComposer
             $namespace = $this->app->getNamespace();
         }
 
-        foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
+        foreach ((new Finder)->in($paths->toArray())->files()->sortByName() as $file) {
             $relativePath = str_replace(
                 Str::finish($path, DIRECTORY_SEPARATOR),
                 '',
