@@ -23,6 +23,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method Builder endFlexibleContent()
  * @method Builder endGroup()
  * @method Builder endRepeater()
+ * @method Builder modifyField(string $name, array|\Closure $modify)
  * @method ChoiceFieldBuilder addButtonGroup(string $name, array $args = [])
  * @method ChoiceFieldBuilder addCheckbox(string $name, array $args = [])
  * @method ChoiceFieldBuilder addChoiceField(string $name, string $type, array $args = [])
@@ -44,6 +45,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method FieldBuilder addOembed(string $name, array $args = [])
  * @method FieldBuilder addPageLink(string $name, array $args = [])
  * @method FieldBuilder addPartial(string $partial)
+ * @method FieldBuilder addPartials(array $partials)
  * @method FieldBuilder addPassword(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
  * @method FieldBuilder addRange(string $name, array $args = [])
@@ -101,6 +103,18 @@ class Builder extends FieldsBuilder
         }
 
         return $this->addFields($partial);
+    }
+
+    /**
+     * Add multiple partials to the field group.
+     */
+    public function addPartials(array $partials): self
+    {
+        foreach ($partials as $partial) {
+            $this->addPartial($partial);
+        }
+
+        return $this;
     }
 
     /**

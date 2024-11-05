@@ -2646,20 +2646,21 @@
         },
         {
             "name": "log1x/acf-composer",
-            "version": "v3.0.23",
-            "version_normalized": "3.0.23.0",
+            "version": "v3.2.0",
+            "version_normalized": "3.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Log1x/acf-composer.git",
-                "reference": "35afac709de3d9838f6a02f62db66e7a95073693"
+                "reference": "5b25b6b0066a712bdfb3a176e9e2f805e1b93b07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Log1x/acf-composer/zipball/35afac709de3d9838f6a02f62db66e7a95073693",
-                "reference": "35afac709de3d9838f6a02f62db66e7a95073693",
+                "url": "https://api.github.com/repos/Log1x/acf-composer/zipball/5b25b6b0066a712bdfb3a176e9e2f805e1b93b07",
+                "reference": "5b25b6b0066a712bdfb3a176e9e2f805e1b93b07",
                 "shasum": ""
             },
             "require": {
+                "laravel/prompts": "*",
                 "php": "^8.0",
                 "stoutlogic/acf-builder": "^1.11"
             },
@@ -2667,7 +2668,7 @@
                 "laravel/pint": "^1.14",
                 "roots/acorn": "^3.0|^4.0"
             },
-            "time": "2024-03-14T13:48:21+00:00",
+            "time": "2024-10-24T12:12:21+00:00",
             "type": "package",
             "extra": {
                 "acorn": {
@@ -2695,7 +2696,7 @@
             "description": "Create fields, blocks, option pages, and widgets using ACF Builder and Sage 10",
             "support": {
                 "issues": "https://github.com/Log1x/acf-composer/issues",
-                "source": "https://github.com/Log1x/acf-composer/tree/v3.0.23"
+                "source": "https://github.com/Log1x/acf-composer/tree/v3.2.0"
             },
             "funding": [
                 {
