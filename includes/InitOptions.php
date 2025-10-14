@@ -15,7 +15,7 @@ class InitOptions
             'page_title' => __('Theme Options'),
             'menu_title' => __('Theme Options'),
             'menu_slug' => 'theme-options',
-            'position' => PHP_INT_MAX,
+            'position' => '',
             'redirection' => true,
         ]);
     }
