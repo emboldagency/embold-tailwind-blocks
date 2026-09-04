@@ -25,7 +25,10 @@ class EmboldTailwindBlocks
 
     protected function createApplication()
     {
-        $app = new Application();
+        // Pass the theme's directory explicitly. Without a base path, Acorn's
+        // storage/view/cache paths resolve relative to null and can land
+        // outside open_basedir, which throws instead of falling back.
+        $app = new Application(dirname(get_theme_file_path('composer.json')));
         $app->singleton('config', function () {
             return new ConfigRepository();
         });
