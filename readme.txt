@@ -21,6 +21,13 @@ Please view the full README.md on GitHub.
 
 == Changelog ==
 
+= 2.3.6 =
+* Fix compatibility and hardening for side-by-side plugin usage
+* Prefix global functions to avoid redeclaration collisions
+* Ensure plugin deactivates gracefully on incompatible themes
+* Implement isolated Composer autoloaders
+
+
 = 2.3.5 = 
 * Fixes open_basedir warnings. Deactivates plugin when Sage theme is not active
 
