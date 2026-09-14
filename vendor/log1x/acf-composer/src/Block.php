@@ -2,18 +2,20 @@
 
 namespace Log1x\AcfComposer;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Concerns\FormatsCss;
+use Illuminate\View\ComponentAttributeBag;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
+use WP_Block_Supports;
 
 use function Roots\asset;
 
 abstract class Block extends Composer implements BlockContract
 {
-    use FormatsCss, InteractsWithBlade;
+    use InteractsWithBlade;
 
     /**
      * The block properties.
@@ -196,6 +198,16 @@ abstract class Block extends Composer implements BlockContract
     public $align_content = '';
 
     /**
+     * The default block spacing.
+     *
+     * @var array
+     */
+    public $spacing = [
+        'padding' => null,
+        'margin' => null,
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
@@ -210,7 +222,7 @@ abstract class Block extends Composer implements BlockContract
     public $styles = [];
 
     /**
-     * The block active style.
+     * The current block style.
      *
      * @var string
      */
@@ -259,6 +271,34 @@ abstract class Block extends Composer implements BlockContract
     public $usePostMeta = false;
 
     /**
+     * The block API version.
+     *
+     * @var int|null
+     */
+    public $apiVersion = null;
+
+    /**
+     * The internal ACF block version.
+     *
+     * @var int|null
+     */
+    public $blockVersion;
+
+    /**
+     * Validate block fields as per the field group configuration.
+     *
+     * @var bool
+     */
+    public $validate = true;
+
+    /**
+     * Enable inline editing for block fields.
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * The block attributes.
      */
     public function attributes(): array
@@ -271,12 +311,18 @@ abstract class Block extends Composer implements BlockContract
      */
     public function mergeAttributes(): void
     {
-        if (! $attributes = $this->attributes()) {
-            return;
+        foreach ($this->attributes() as $key => $value) {
+            if (! property_exists($this, $key)) {
+                continue;
+            }
+
+            $this->{$key} = $value;
         }
 
-        foreach ($attributes as $key => $value) {
-            if (! property_exists($this, $key)) {
+        $defaults = config('acf.blocks', []);
+
+        foreach ($defaults as $key => $value) {
+            if (! property_exists($this, $key) || filled($this->{$key})) {
                 continue;
             }
 
@@ -316,7 +362,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getDefaultStyle(): array
     {
-        return collect($this->getStyles())->firstWhere('isDefault') ?? [];
+        return $this->collect($this->getStyles())->firstWhere('isDefault') ?? [];
     }
 
     /**
@@ -324,7 +370,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getStyles(): array
     {
-        $styles = collect($this->styles)->map(function ($value, $key) {
+        $styles = $this->collect($this->styles)->map(function ($value, $key) {
             if (is_array($value)) {
                 return $value;
             }
@@ -350,27 +396,92 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block supports.
+     */
+    public function getSupports(): array
+    {
+        $supports = $this->collect($this->supports)
+            ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
+            ->merge($this->supports);
+
+        $typography = $supports->get('typography', []);
+
+        if ($supports->has('alignText')) {
+            $typography['textAlign'] = $supports->get('alignText');
+
+            $supports->forget(['alignText', 'align_text']);
+        }
+
+        if ($typography) {
+            $supports->put('typography', $typography);
+        }
+
+        return $supports->all();
+    }
+
+    /**
+     * Retrieve the block support attributes.
+     */
+    public function getSupportAttributes(): array
+    {
+        $attributes = [];
+
+        if ($this->align) {
+            $attributes['align'] = [
+                'type' => 'string',
+                'default' => $this->align,
+            ];
+        }
+
+        if ($this->align_content) {
+            $attributes['alignContent'] = [
+                'type' => 'string',
+                'default' => $this->align_content,
+            ];
+        }
+
+        $styles = [];
+
+        if ($this->align_text) {
+            $styles['typography']['textAlign'] = $this->align_text;
+        }
+
+        $spacing = array_filter($this->spacing);
+
+        if ($spacing) {
+            $styles['spacing'] = $spacing;
+        }
+
+        if ($styles) {
+            $attributes['style'] = [
+                'type' => 'object',
+                'default' => $styles,
+            ];
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Retrieve the block HTML attributes.
+     */
+    public function getHtmlAttributes(): array
+    {
+        if ($this->preview) {
+            return [];
+        }
+
+        return WP_Block_Supports::get_instance()?->apply_block_supports() ?? [];
+    }
+
+    /**
      * Retrieve the inline block styles.
      */
     public function getInlineStyle(): string
     {
-        return collect([
-            'padding' => ! empty($this->block->style['spacing']['padding'])
-                ? collect($this->block->style['spacing']['padding'])
-                    ->map(fn ($value, $side) => $this->formatCss($value, $side))
-                    ->implode(' ')
-                : null,
+        $supports = $this->getHtmlAttributes();
 
-            'margin' => ! empty($this->block->style['spacing']['margin'])
-                ? collect($this->block->style['spacing']['margin'])
-                    ->map(fn ($value, $side) => $this->formatCss($value, $side, 'margin'))
-                    ->implode(' ')
-                : null,
-
-            'color' => ! empty($this->block->style['color']['gradient'])
-                ? sprintf('background: %s;', $this->block->style['color']['gradient'])
-                : null,
-        ])->filter()->implode(' ');
+        return $supports['style'] ?? '';
     }
 
     /**
@@ -378,41 +489,51 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $classes = collect([
-            'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
+        $supports = $this->getHtmlAttributes();
 
-            'className' => $this->block->className ?? null,
-
-            'align' => ! empty($this->block->align)
-                ? Str::start($this->block->align, 'align')
-                : null,
-
-            'backgroundColor' => ! empty($this->block->backgroundColor)
-                ? sprintf('has-background has-%s-background-color', $this->block->backgroundColor)
-                : null,
-
-            'textColor' => ! empty($this->block->textColor)
-                ? sprintf('has-%s-color', $this->block->textColor)
-                : null,
-
-            'gradient' => ! empty($this->block->gradient)
-                ? sprintf('has-%s-gradient-background', $this->block->gradient)
-                : null,
-        ]);
-
-        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
-            $classes->add(Str::start($alignText, 'align-text-'));
-        }
+        $class = $supports['class'] ?? '';
 
         if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
-            $classes->add(Str::start($alignContent, 'is-position-'));
+            $class = "{$class} is-position-{$alignContent}";
         }
 
         if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
-            $classes->add('full-height');
+            $class = "{$class} full-height";
         }
 
-        return $classes->filter()->implode(' ');
+        return str_replace(
+            acf_slugify($this->namespace),
+            $this->slug,
+            trim($class)
+        );
+    }
+
+    /**
+     * Retrieve the component attribute bag.
+     */
+    protected function getComponentAttributeBag(): ComponentAttributeBag
+    {
+        return (new ComponentAttributeBag)
+            ->class($this->getClasses())
+            ->style($this->getInlineStyle())
+            ->merge(['id' => $this->block->anchor ?? null])
+            ->filter(fn ($value) => filled($value) && $value !== ';');
+    }
+
+    /**
+     * Retrieve the block API version.
+     */
+    public function getApiVersion(): int
+    {
+        return $this->apiVersion ?? 2;
+    }
+
+    /**
+     * Retrieve the block version.
+     */
+    public function getBlockVersion(): int
+    {
+        return $this->blockVersion ?? 2;
     }
 
     /**
@@ -452,7 +573,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function handleTemplate(array $template = []): Collection
     {
-        return collect($template)->map(function ($block, $key) {
+        return $this->collect($template)->map(function ($block, $key) {
             $name = is_numeric($key)
                 ? array_key_first((array) $block)
                 : $key;
@@ -498,10 +619,39 @@ abstract class Block extends Composer implements BlockContract
 
         $this->register(fn () => $this->hasJson()
             ? register_block_type($this->jsonPath())
-            : acf_register_block_type($this->settings()->all())
+            : $this->registerBlockType()
         );
 
         return $this;
+    }
+
+    /**
+     * Register the block type.
+     */
+    public function registerBlockType(): void
+    {
+        $block = acf_validate_block_type($this->settings()->all());
+        $block = apply_filters('acf/register_block_type_args', $block);
+
+        if (acf_has_block_type($block['name'])) {
+            throw new Exception("Block type [{$block['name']}] is already registered.");
+        }
+
+        $block['attributes'] = array_merge(
+            acf_get_block_type_default_attributes($block),
+            $block['attributes'] ?? []
+        );
+
+        acf_get_store('block-types')->set($block['name'], $block);
+
+        $block['render_callback'] = 'acf_render_block_callback';
+
+        register_block_type(
+            $block['name'],
+            $block
+        );
+
+        add_action('enqueue_block_editor_assets', 'acf_enqueue_block_assets');
     }
 
     /**
@@ -513,13 +663,6 @@ abstract class Block extends Composer implements BlockContract
             return $this->settings;
         }
 
-        if ($this->supports) {
-            $this->supports = collect($this->supports)
-                ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
-                ->merge($this->supports)
-                ->all();
-        }
-
         $settings = Collection::make([
             'name' => $this->slug,
             'title' => $this->getName(),
@@ -527,20 +670,18 @@ abstract class Block extends Composer implements BlockContract
             'category' => $this->category,
             'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
-            'parent' => $this->parent ?: null,
-            'ancestor' => $this->ancestor ?: null,
             'post_types' => $this->post_types,
             'mode' => $this->mode,
             'align' => $this->align,
+            'attributes' => $this->getSupportAttributes(),
             'alignText' => $this->align_text ?? $this->align,
             'alignContent' => $this->align_content,
             'styles' => $this->getStyles(),
-            'supports' => $this->supports,
-            'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
+            'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
-            'acf_block_version' => 2,
-            'api_version' => 2,
-            'validate' => true,
+            'acf_block_version' => $this->getBlockVersion(),
+            'api_version' => $this->getApiVersion(),
+            'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
                 $block,
@@ -553,6 +694,14 @@ abstract class Block extends Composer implements BlockContract
                 echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
             },
         ]);
+
+        if (filled($this->parent)) {
+            $settings = $settings->put('parent', $this->parent);
+        }
+
+        if (filled($this->ancestor)) {
+            $settings = $settings->put('ancestor', $this->ancestor);
+        }
 
         if ($this->example !== false) {
             if (method_exists($this, 'example') && is_array($example = $this->example())) {
@@ -583,17 +732,34 @@ abstract class Block extends Composer implements BlockContract
      */
     public function toJson(): string
     {
-        $settings = $this->settings()->forget([
-            'acf_block_version',
-            'enqueue_assets',
-            'mode',
-            'render_callback',
-            'use_post_meta',
-        ])->put('acf', [
-            'mode' => $this->mode,
-            'renderTemplate' => $this::class,
-            'usePostMeta' => $this->usePostMeta,
-        ])->put('name', $this->namespace);
+        $settings = $this->settings()
+            ->put('name', $this->namespace)
+            ->put('apiVersion', $this->getApiVersion())
+            ->put('usesContext', $this->uses_context)
+            ->put('providesContext', $this->provides_context)
+            ->put('acf', [
+                'blockVersion' => $this->getBlockVersion(),
+                'mode' => $this->mode,
+                'postTypes' => $this->post_types,
+                'renderTemplate' => $this::class,
+                'usePostMeta' => $this->usePostMeta,
+                'validate' => $this->validate,
+                'autoInlineEditing' => $this->autoInlineEditing ?? false,
+            ])
+            ->forget([
+                'api_version',
+                'acf_block_version',
+                'align',
+                'alignContent',
+                'alignText',
+                'mode',
+                'post_types',
+                'render_callback',
+                'use_post_meta',
+                'validate',
+                'uses_context',
+                'provides_context',
+            ]);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
     }
@@ -644,7 +810,18 @@ abstract class Block extends Composer implements BlockContract
         $this->style = $this->getStyle();
         $this->inlineStyle = $this->getInlineStyle();
 
-        return $this->view($this->view, ['block' => $this]);
+        if (! is_admin() && method_exists($this, 'assets')) {
+            $instance = (array) ($this->block ?? []);
+
+            add_action('enqueue_block_assets', function () use ($instance): void {
+                $this->assets($instance);
+            });
+        }
+
+        return $this->view($this->view, [
+            'block' => $this,
+            'attributes' => $this->getComponentAttributeBag(),
+        ]);
     }
 
     /**
