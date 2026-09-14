@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Concerns\HasCollection;
 use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use ReflectionClass;
 use Roots\Acorn\Application;
@@ -11,12 +12,7 @@ use Symfony\Component\Finder\Finder;
 
 class AcfComposer
 {
-    /**
-     * The application instance.
-     *
-     * @var \Roots\Acorn\Application
-     */
-    public $app;
+    use HasCollection;
 
     /**
      * The booted state.
@@ -71,9 +67,8 @@ class AcfComposer
     /**
      * Create a new Composer instance.
      */
-    public function __construct(Application $app)
+    public function __construct(public Application $app)
     {
-        $this->app = $app;
         $this->manifest = Manifest::make($this);
     }
 
@@ -198,6 +193,24 @@ class AcfComposer
      */
     protected function handleBlocks(): void
     {
+        if (is_admin()) {
+            add_action('enqueue_block_assets', function () {
+                foreach ($this->composers() as $composers) {
+                    foreach ($composers as $composer) {
+                        if (! is_a($composer, Block::class)) {
+                            continue;
+                        }
+
+                        method_exists($composer, 'assets') && $composer->assets((array) $composer->block ?? []);
+                    }
+                }
+            });
+        }
+
+        add_action('enqueue_block_editor_assets', function () {
+            wp_add_inline_script('wp-blocks', view('acf-composer::block-editor-filters')->render());
+        });
+
         add_action('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
             if (! class_exists($composer = $block['render_template'] ?? '')) {
                 return;
@@ -208,8 +221,6 @@ class AcfComposer
             }
 
             add_filter('acf/blocks/template_not_found_message', fn () => '');
-
-            method_exists($composer, 'assets') && $composer->assets($block);
 
             echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
         }, 9, 6);
@@ -228,7 +239,7 @@ class AcfComposer
      */
     public function registerPath(string $path, ?string $namespace = null): array
     {
-        $paths = collect(File::directories($path))
+        $paths = $this->collect(File::directories($path))
             ->filter(fn ($item) => Str::contains($item, $this->classes));
 
         if ($paths->isEmpty()) {

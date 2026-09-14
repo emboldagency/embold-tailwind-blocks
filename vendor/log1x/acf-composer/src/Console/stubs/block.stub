@@ -92,6 +92,16 @@ class DummyClass extends Block
     public $align_content = '';
 
     /**
+     * The default block spacing.
+     *
+     * @var array
+     */
+    public $spacing = [
+        'padding' => null,
+        'margin' => null,
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
@@ -131,6 +141,13 @@ class DummyClass extends Block
     ];
 
     /**
+     * Enable inline editing for block fields.
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * Data to be passed to the block before rendering.
      */
     public function with(): array
@@ -166,7 +183,9 @@ class DummyClass extends Block
     }
 
     /**
-     * Assets enqueued when rendering the block.
+     * Assets enqueued with 'enqueue_block_assets' when rendering the block.
+     *
+     * @link https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles
      */
     public function assets(array $block): void
     {

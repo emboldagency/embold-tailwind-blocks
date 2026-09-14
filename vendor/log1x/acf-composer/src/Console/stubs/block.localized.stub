@@ -124,6 +124,13 @@ class DummyClass extends Block
     ];
 
     /**
+     * Enable inline editing for block fields.
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * The block name.
      */
     public function getName(): string
@@ -175,7 +182,9 @@ class DummyClass extends Block
     }
 
     /**
-     * Assets enqueued when rendering the block.
+     * Assets enqueued with 'enqueue_block_assets' when rendering the block.
+     *
+     * @link https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles
      */
     public function assets(array $block): void
     {
