@@ -10,17 +10,12 @@
       "App\\Fields\\": "app/Fields/"
     }
   },
-  "scripts": {
-    "post-autoload-dump": [
-      "Roots\\Acorn\\ComposerScripts::postAutoloadDump"
-    ]
-  },
-  "require": {
-    "log1x/acf-composer": "^3.1.1",
+  "require-dev": {
     "roots/acorn": "^4.1",
     "illuminate/support": "^10.43",
     "illuminate/filesystem": "^10.43",
     "illuminate/container": "^10.43",
-    "illuminate/config": "^10.43"
+    "illuminate/config": "^10.43",
+    "log1x/acf-composer": "^3.1.1"
   }
 }
