@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Config\Repository as ConfigRepository;
 use Log1x\AcfComposer\AcfComposer;
-use Roots\Acorn\Application;
 
 class EmboldTailwindBlocks
 {
@@ -15,27 +13,13 @@ class EmboldTailwindBlocks
     public function __construct()
     {
         // Initialize the application
-        $this->app = $this->createApplication();
+        $this->app = \Roots\app();
 
         $this->composer = new AcfComposer($this->app);
 
         // Auto-load blocks
         add_action('acf/init', [$this, 'init']);
     }
-
-    protected function createApplication()
-    {
-        // Pass the theme's directory explicitly. Without a base path, Acorn's
-        // storage/view/cache paths resolve relative to null and can land
-        // outside open_basedir, which throws instead of falling back.
-        $app = new Application(dirname(get_theme_file_path('composer.json')));
-        $app->singleton('config', function () {
-            return new ConfigRepository();
-        });
-
-        return $app;
-    }
-
     public function init()
     {
         InitOptions::initialize();

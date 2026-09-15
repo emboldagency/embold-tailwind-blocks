@@ -216,6 +216,14 @@ if (! function_exists("embold_tailwind_blocks_check_theme_acorn_version")) {
 
 add_action('admin_init', 'embold_tailwind_blocks_check_theme_acorn_version');
 
+if (embold_tailwind_blocks_theme_is_sage()) {
+    // Load the autoloader
+    require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
+
+    // Include the main plugin class
+    require_once plugin_dir_path(__FILE__).'includes/EmboldTailwindBlocks.php';
+}
+
 require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
@@ -243,13 +251,11 @@ function embold_tailwind_blocks_init()
         return;
     }
 
-    // Load the autoloader
-    require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
-
-    // Include the main plugin class
-    require_once plugin_dir_path(__FILE__).'includes/EmboldTailwindBlocks.php';
-
     // Create an instance of your plugin class
+    if (!function_exists('\Roots\app')) {
+        return;
+    }
+
     $plugin = new \App\EmboldTailwindBlocks();
 
     // Insert the block category
@@ -261,4 +267,4 @@ function embold_tailwind_blocks_init()
     $plugin->registerModifiers();
 }
 
-add_action('plugins_loaded', 'embold_tailwind_blocks_init');
+add_action('after_setup_theme', 'embold_tailwind_blocks_init', 100);
