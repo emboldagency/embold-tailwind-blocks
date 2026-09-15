@@ -21,6 +21,9 @@ Please view the full README.md on GitHub.
 
 == Changelog ==
 
+= 2.3.7 =
+* Internal: Upgraded deployment pipeline to generate checksum-compliant release zips.
+
 = 2.3.6 =
 * Fix compatibility and hardening for side-by-side plugin usage
 * Prefix global functions to avoid redeclaration collisions
