@@ -12,9 +12,9 @@ abstract class CustomBlock extends Block
 
     protected $defaultIconForeground = '#009dff';
 
-    public function __construct($app)
+    public function __construct(\Log1x\AcfComposer\AcfComposer $composer)
     {
-        parent::__construct($app);
+        parent::__construct($composer);
 
         if (is_string($this->icon)) {
             $this->icon = [
@@ -103,7 +103,9 @@ abstract class CustomBlock extends Block
 
         $this->assets($block);
 
+        $plugin_view_path = dirname(plugin_dir_path(__FILE__)) . "/resources/views/blocks/{$this->slug}.blade.php";
+        
         // If the theme doesn't have a view for this block, return ours
-        return $this->view(str_replace('includes/', '', plugin_dir_path(__FILE__))."resources/views/blocks/{$this->slug}.blade.php", ['block' => $this]);
+        return $this->view($plugin_view_path, ['block' => $this]);
     }
 }
