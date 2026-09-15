@@ -21,7 +21,9 @@ Please view the full README.md on GitHub.
 
 == Changelog ==
 
-= 2.3.7 =
+= 2.3.8 =
+* Fix autoloader timing conflict causing theme blocks to fail registration in editor
+* Fix frontend WSOD caused by invalid resourcePath call in CustomBlock
 * Internal: Upgraded deployment pipeline to generate checksum-compliant release zips.
 
 = 2.3.6 =
