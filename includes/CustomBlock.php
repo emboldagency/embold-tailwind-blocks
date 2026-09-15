@@ -104,6 +104,6 @@ abstract class CustomBlock extends Block
         $this->assets($block);
 
         // If the theme doesn't have a view for this block, return ours
-        return $this->view(str_replace('includes/', '', plugin_dir_path(__FILE__).$this->app->resourcePath("views/blocks/{$this->slug}.blade.php")), ['block' => $this]);
+        return $this->view(str_replace('includes/', '', plugin_dir_path(__FILE__))."resources/views/blocks/{$this->slug}.blade.php", ['block' => $this]);
     }
 }
