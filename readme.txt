@@ -3,7 +3,7 @@ Contributors: itsjsutxan, embold-tyler
 Tags: tailwind, blocks
 Requires at least: 6.0
 Tested up to: 6.6.2
-Stable tag: 2.3.5
+Stable tag: 2.3.9
 Requires PHP: 8.0
 
 A collection of Tailwind Blocks, written with ACF Composer and Blade Templates.
@@ -20,6 +20,9 @@ the theme files take priority. You can do this with the Padding field, or any vi
 Please view the full README.md on GitHub.
 
 == Changelog ==
+
+= 2.3.9 =
+* Fix the plugin header version so WordPress offers this update; 2.3.8 was tagged with an older header, so sites never saw it.
 
 = 2.3.8 =
 * Fix autoloader timing conflict causing theme blocks to fail registration in editor
