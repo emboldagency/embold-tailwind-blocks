@@ -79,10 +79,12 @@ abstract class CustomBlock extends Block
             'align' => ! empty($this->block->align) ?
                 Str::start($this->block->align, 'align') :
                 false,
-            'align_text' => ! empty($this->supports['align_text']) ?
+            'align_text' => ! empty($this->supports['align_text'])
+                && ! empty($this->block->align_text) ?
                 Str::start($this->block->align_text, 'align-text-') :
                 false,
-            'align_content' => ! empty($this->supports['align_content']) ?
+            'align_content' => ! empty($this->supports['align_content'])
+                && ! empty($this->block->align_content) ?
                 Str::start($this->block->align_content, 'is-position-') :
                 false,
             'full_height' => ! empty($this->supports['full_height'])
